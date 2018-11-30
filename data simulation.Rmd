@@ -12,37 +12,70 @@ suppressWarnings(library(ggplot2))
 suppressWarnings(library(knitr))
 ```
 
+Medicine A&B treat on the same disease but have risk of side effect W.
+
 
 ## Data Generation
-```{r, continuous outcome}
+```{r}
+# Patients characteristics
+X1=rbinom(20000, size=1, prob=0.4) #gender
+X2=rbinom(20000, size=1, prob=0.1) #age >= 75
+X3=round(rnorm(20000, mean=23, sd=3)) #BMI #non-measured confounder
+X4=round(rnorm(20000, mean=130, sd=7)) #blood pressure Systolic
+X5=rbinom(20000, size=1, prob=0.1) #History of side effect related disease
 
+C=data.frame(cbind(X1,X2,X3,X4,X5))
+
+
+# Physician assignments
 
 patientid=c(1:20000)
-physicianid=c(1:200)
-pp=sample(c(rep(0,100),rep(1,100)))  
+physicianid=sample(c(1:200))
+pp=sample(c(rep(0,100),rep(1,100)))
 
-X1=rnorm(20000, mean=0, sd=1)
-X2=runif(20000, min=0, max=1)
-X3=rbinom(20000, size=1, prob=0.35)
+df=data.frame(cbind(patientid,C,physicianid,pp))
+df$X1=as.numeric(df$X1)
+df$X2=as.numeric(df$X2)
+df$X3=as.numeric(df$X3)
+df$X4=as.numeric(df$X4)
+df$X5=as.numeric(df$X5)
+df$pp=as.numeric(df$pp)
 
-M=cbind(X1,X2,X3)
-cov=cov(M)
+df10=df
+df10$trt=NA
 
-## Patients’ characteristics
+df20=df
+df20$trt=NA
+
+df30=df
+df30$trt=NA
+
+# treatment assignment
+for(i in 1:(0.9*nrow(df10)))
+    {
+    prob=0.02+0.7*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
+    df10$trt[i]=rbinom(1,1,prob)
+  }
+df10$trt[is.na(df10$trt)]=1
 
 
-## physicianid & pp assignment
+for(i in 1:(0.8*nrow(df20)))
+    {
+    prob=0.02+0.7*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
+    df20$trt[i]=rbinom(1,1,prob)
+  }
+df20$trt[is.na(df20$trt)]=1
 
 
-## generate the treatment 
-treatment = rep(NA,20000)
+for(i in 1:(0.7*nrow(df30)))
+    {
+    prob=0.02+0.7*df30$pp[i]+0.02*df30$X1[i]-0.012*df30$X2[i]+0.006*df30$X3[i]-0.0005*df30$X4[i]-0.03*df30$X5[i]
+    df30$trt[i]=rbinom(1,1,prob)
+  }
+df30$trt[is.na(df30$trt)]=1
+```
 
-for(i in 1:length(treatment))
-{
-  prob = 0.02 + 0.7*pp[i]+0.02*X1[i]+0.12*X2[i]+0.06*X3[i] 
-  treatment[i] = rbinom(1,1,prob)
-}
-
+```{r, continuous outcome}
 
 ```
 
