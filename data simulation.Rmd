@@ -8,12 +8,18 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
+suppressWarnings(library(ggplot2))
+suppressWarnings(library(knitr))
 ```
 
+
+## Data Generation
 ```{r, continuous outcome}
+
+
 patientid=c(1:20000)
 physicianid=c(1:200)
-pp=sample(c(rep(0,100),rep(1,100)))
+pp=sample(c(rep(0,100),rep(1,100)))  
 
 X1=rnorm(20000, mean=0, sd=1)
 X2=runif(20000, min=0, max=1)
@@ -21,4 +27,23 @@ X3=rbinom(20000, size=1, prob=0.35)
 
 M=cbind(X1,X2,X3)
 cov=cov(M)
+
+## Patients’ characteristics
+
+
+## physicianid & pp assignment
+
+
+## generate the treatment 
+treatment = rep(NA,20000)
+
+for(i in 1:length(treatment))
+{
+  prob = 0.02 + 0.7*pp[i]+0.02*X1[i]+0.12*X2[i]+0.06*X3[i] 
+  treatment[i] = rbinom(1,1,prob)
+}
+
+
 ```
+
+
