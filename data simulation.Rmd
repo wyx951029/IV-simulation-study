@@ -16,6 +16,8 @@ Medicine A&B treat on the same disease but have risk of side effect W.
 
 
 ## Data Generation
+
+### Treatment Assignment
 ```{r}
 # Patients characteristics
 X1=rbinom(20000, size=1, prob=0.4) #gender
@@ -23,16 +25,11 @@ X2=rbinom(20000, size=1, prob=0.1) #age >= 75
 X3=round(rnorm(20000, mean=23, sd=3)) #BMI #non-measured confounder
 X4=round(rnorm(20000, mean=130, sd=7)) #blood pressure Systolic
 X5=rbinom(20000, size=1, prob=0.1) #History of side effect related disease
-
 C=data.frame(cbind(X1,X2,X3,X4,X5))
-
-
 # Physician assignments
-
 patientid=c(1:20000)
 physicianid=sample(c(1:200))
 pp=sample(c(rep(0,100),rep(1,100)))
-
 df=data.frame(cbind(patientid,C,physicianid,pp))
 df$X1=as.numeric(df$X1)
 df$X2=as.numeric(df$X2)
@@ -40,16 +37,12 @@ df$X3=as.numeric(df$X3)
 df$X4=as.numeric(df$X4)
 df$X5=as.numeric(df$X5)
 df$pp=as.numeric(df$pp)
-
 df10=df
 df10$trt=NA
-
 df20=df
 df20$trt=NA
-
 df30=df
 df30$trt=NA
-
 # treatment assignment
 for(i in 1:(0.9*nrow(df10)))
     {
@@ -57,16 +50,12 @@ for(i in 1:(0.9*nrow(df10)))
     df10$trt[i]=rbinom(1,1,prob)
   }
 df10$trt[is.na(df10$trt)]=1
-
-
 for(i in 1:(0.8*nrow(df20)))
     {
     prob=0.02+0.7*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
     df20$trt[i]=rbinom(1,1,prob)
   }
 df20$trt[is.na(df20$trt)]=1
-
-
 for(i in 1:(0.7*nrow(df30)))
     {
     prob=0.02+0.7*df30$pp[i]+0.02*df30$X1[i]-0.012*df30$X2[i]+0.006*df30$X3[i]-0.0005*df30$X4[i]-0.03*df30$X5[i]
@@ -75,8 +64,201 @@ for(i in 1:(0.7*nrow(df30)))
 df30$trt[is.na(df30$trt)]=1
 ```
 
-```{r, continuous outcome}
+### Outcome W 
+
+The outcome is whether the side effect appears
+```{r Relatively frequent binary outcome} 
+
+## x3 is unmeasured confounder, coefficient = 0.001
+## df10 
+
+df10_1 = df10
+df10_1$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df10_1$trt[i]+0.00021*df10_1$X1[i]+0.009*df10_1$X2[i]+0.001*df10_1$X3[i]+0.001*df10_1$X4[i]+0.0018*df10_1$X5[i]
+    df10_1$W[i]=rbinom(1,1,prob)
+}
+
+
+## df20
+
+df20_1 = df20 
+df20_1$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df20_1$trt[i]+0.00021*df20_1$X1[i]+0.009*df20_1$X2[i]+0.001*df20_1$X3[i]+0.001*df20_1$X4[i]+0.0018*df20_1$X5[i]
+    
+    df20_1$W[i]=rbinom(1,1,prob)
+}
+
+
+
+## df30
+
+df30_1 = df30
+df30_1$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df30_1$trt[i]+0.00021*df30_1$X1[i]+0.009*df30_1$X2[i]+0.001*df30_1$X3[i]+0.001*df30_1$X4[i]+0.0018*df30_1$X5[i]
+    df30_1$W[i]=rbinom(1,1,prob)
+}
 
 ```
+
+
+
+```{r}
+
+## x3 is unmeasured confounder, coefficient = 0.002
+## df10 
+
+df10_2 = df10
+df10_2$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df10_2$trt[i]+0.00021*df10_2$X1[i]+0.009*df10_2$X2[i]+0.002*df10_2$X3[i]+0.001*df10_2$X4[i]+0.0018*df10_2$X5[i]
+    df10_2$W[i]=rbinom(1,1,prob)
+}
+
+
+## df20
+
+df20_2 = df20 
+df20_2$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df20_2$trt[i]+0.00021*df20_2$X1[i]+0.009*df20_2$X2[i]+0.002*df20_2$X3[i]+0.001*df20_2$X4[i]+0.0018*df20_2$X5[i]
+    
+    df20_2$W[i]=rbinom(1,1,prob)
+}
+
+
+
+## df30
+
+df30_2 = df30
+df30_2$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df30_2$trt[i]+0.00021*df30_2$X1[i]+0.009*df30_2$X2[i]+0.002*df30_2$X3[i]+0.001*df30_2$X4[i]+0.0018*df30_2$X5[i]
+    df30_2$W[i]=rbinom(1,1,prob)
+}
+
+```
+
+
+
+```{r}
+
+## x3 is unmeasured confounder, coefficient = 0.003
+## df10 
+
+df10_3 = df10
+df10_3$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df10_3$trt[i]+0.00021*df10_3$X1[i]+0.009*df10_3$X2[i]+0.003*df10_3$X3[i]+0.001*df10_3$X4[i]+0.0018*df10_3$X5[i]
+    df10_3$W[i]=rbinom(1,1,prob)
+}
+
+
+## df20
+
+df20_3 = df20 
+df20_3$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df20_3$trt[i]+0.00021*df20_3$X1[i]+0.009*df20_3$X2[i]+0.003*df20_3$X3[i]+0.001*df20_3$X4[i]+0.0018*df20_3$X5[i]
+    
+    df20_3$W[i]=rbinom(1,1,prob)
+}
+
+
+
+## df30
+
+df30_3 = df30
+df30_3$W = NA
+
+## assuming the exclusion restriction holds
+
+prob = rep(NA, 20000)
+
+for(i in 1:20000)
+  {
+    prob[i]=0.002+0.003*df30_3$trt[i]+0.00021*df30_3$X1[i]+0.009*df30_3$X2[i]+0.003*df30_3$X3[i]+0.001*df30_3$X4[i]+0.0018*df30_3$X5[i]
+    df30_3$W[i]=rbinom(1,1,prob)
+}
+
+```
+
+## Analysis of simulated data
+
+
+1. Ideal model adjusted for all covariates, including the
+unobserved confounder X2.
+2. Conventional model adjusted only for the observed covariates
+X1 and X3.
+3. IV model implemented through the 2SLS Equations (1)
+and (2), with the treatment effect estimated by ^a1 in
+Equation (2).
+
+We compare the results from implementing the three models. 
+
+
+Ideal model 
+```{r}
+## df10_1, df10_2,df10_3, df20_1, df20_2,df20_3, df30_1, df30_2,df30_3
+
+ideal_model = function(data){
+  m1 = lm(W~.-patientid - physicianid - pp, data = data)
+  summary(m1)
+}
+
+ideal_model(df10_1)
+
+```
+
 
 
