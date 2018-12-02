@@ -14,19 +14,17 @@ suppressWarnings(library(knitr))
 
 Medicine A&B treat on the same disease but have risk of side effect W.
 
-
-
 ## Data Generation-Population size=20000
 
 ### Treatment Assignment
 ```{r}
 # Patients characteristics
-X1=rbinom(10000, size=1, prob=0.4) #gender
-X2=rbinom(10000, size=1, prob=0.1) #age >= 75
-X3=round(rnorm(10000, mean=23, sd=3)) #BMI #non-measured confounder
-X4=round(rnorm(10000, mean=130, sd=7)) #blood pressure Systolic
-X5=rbinom(10000, size=1, prob=0.1) #History of side effect related disease
-C=data.frame(cbind(X1,X2,X3,X4,X5))
+X1=rbinom(10000, size=1, prob=0.4) # gender
+X2=rbinom(10000, size=1, prob=0.1) # age >= 75
+X3=round(rnorm(10000, mean=23, sd=3)) # BMI 
+X4=round(rnorm(10000, mean=130, sd=7)) # blood pressure systolic
+X5=rbinom(10000, size=1, prob=0.1) # history of side effect related disease # unmeasured confounder 
+C=data.frame(cbind(X1,X2,X3,X4,X5)) 
 
 # Physician assignments
 patientid=c(1:10000)
@@ -83,10 +81,9 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df10_1$trt[i]+0.00021*df10_1$X1[i]+0.009*df10_1$X2[i]+0.001*df10_1$X3[i]+0.001*df10_1$X4[i]+0.0018*df10_1$X5[i]
+    prob[i]=0.002+0.005*df10_1$trt[i]+0.00021*df10_1$X1[i]+0.002*df10_1$X2[i]+0.0008*df10_1$X3[i]+0.001*df10_1$X4[i]+0.001*df10_1$X5[i]
     df10_1$W[i]=rbinom(1,1,prob)
 }
-
 
 ## df20
 
@@ -99,11 +96,10 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df20_1$trt[i]+0.00021*df20_1$X1[i]+0.009*df20_1$X2[i]+0.001*df20_1$X3[i]+0.001*df20_1$X4[i]+0.0018*df20_1$X5[i]
-    
-    df20_1$W[i]=rbinom(1,1,prob)
+  
+  prob[i]=0.002+0.005*df20_1$trt[i]+0.00021*df20_1$X1[i]+0.002*df20_1$X2[i]+0.0008*df20_1$X3[i]+0.001*df20_1$X4[i]+0.001*df20_1$X5[i]
+  df20_1$W[i]=rbinom(1,1,prob)
 }
-
 
 
 ## df30
@@ -117,8 +113,8 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df30_1$trt[i]+0.00021*df30_1$X1[i]+0.009*df30_1$X2[i]+0.001*df30_1$X3[i]+0.001*df30_1$X4[i]+0.0018*df30_1$X5[i]
-    df30_1$W[i]=rbinom(1,1,prob)
+   prob[i]=0.002+0.005*df30_1$trt[i]+0.00021*df30_1$X1[i]+0.002*df30_1$X2[i]+0.0008*df30_1$X3[i]+0.001*df30_1$X4[i]+0.001*df30_1$X5[i]
+   df30_1$W[i]=rbinom(1,1,prob)
 }
 
 ```
@@ -139,8 +135,10 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df10_2$trt[i]+0.00021*df10_2$X1[i]+0.009*df10_2$X2[i]+0.002*df10_2$X3[i]+0.001*df10_2$X4[i]+0.0018*df10_2$X5[i]
-    df10_2$W[i]=rbinom(1,1,prob)
+  
+  prob[i]=0.002+0.005*df10_2$trt[i]+0.00021*df10_2$X1[i]+0.002*df10_2$X2[i]+0.0008*df10_2$X3[i]+0.001*df10_2$X4[i]+0.002*df10_2$X5[i]
+  df10_2$W[i]=rbinom(1,1,prob)
+  
 }
 
 
@@ -155,12 +153,11 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df20_2$trt[i]+0.00021*df20_2$X1[i]+0.009*df20_2$X2[i]+0.002*df20_2$X3[i]+0.001*df20_2$X4[i]+0.0018*df20_2$X5[i]
-    
-    df20_2$W[i]=rbinom(1,1,prob)
+  
+  prob[i]=0.002+0.005*df20_2$trt[i]+0.00021*df20_2$X1[i]+0.002*df20_2$X2[i]+0.0008*df20_2$X3[i]+0.001*df20_2$X4[i]+0.002*df20_2$X5[i]
+  df20_2$W[i]=rbinom(1,1,prob)
+  
 }
-
-
 
 ## df30
 
@@ -173,8 +170,8 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df30_2$trt[i]+0.00021*df30_2$X1[i]+0.009*df30_2$X2[i]+0.002*df30_2$X3[i]+0.001*df30_2$X4[i]+0.0018*df30_2$X5[i]
-    df30_2$W[i]=rbinom(1,1,prob)
+  prob[i]=0.002+0.005*df30_2$trt[i]+0.00021*df30_2$X1[i]+0.002*df30_2$X2[i]+0.0008*df30_2$X3[i]+0.001*df30_2$X4[i]+0.002*df30_2$X5[i]
+  df30_2$W[i]=rbinom(1,1,prob)
 }
 
 ```
@@ -195,10 +192,11 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df10_3$trt[i]+0.00021*df10_3$X1[i]+0.009*df10_3$X2[i]+0.003*df10_3$X3[i]+0.001*df10_3$X4[i]+0.0018*df10_3$X5[i]
-    df10_3$W[i]=rbinom(1,1,prob)
+  
+  prob[i]=0.002+0.005*df10_3$trt[i]+0.00021*df10_3$X1[i]+0.002*df10_3$X2[i]+0.0008*df10_3$X3[i]+0.001*df10_3$X4[i]+0.003*df10_3$X5[i]
+  
+  df10_3$W[i]=rbinom(1,1,prob)
 }
-
 
 ## df20
 
@@ -211,9 +209,10 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df20_3$trt[i]+0.00021*df20_3$X1[i]+0.009*df20_3$X2[i]+0.003*df20_3$X3[i]+0.001*df20_3$X4[i]+0.0018*df20_3$X5[i]
-    
-    df20_3$W[i]=rbinom(1,1,prob)
+  
+  prob[i]=0.002+0.005*df20_3$trt[i]+0.00021*df20_3$X1[i]+0.002*df20_3$X2[i]+0.0008*df20_3$X3[i]+0.001*df20_3$X4[i]+0.003*df20_3$X5[i]
+  
+  df20_3$W[i]=rbinom(1,1,prob)
 }
 
 
@@ -229,8 +228,10 @@ prob = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df30_3$trt[i]+0.00021*df30_3$X1[i]+0.009*df30_3$X2[i]+0.003*df30_3$X3[i]+0.001*df30_3$X4[i]+0.0018*df30_3$X5[i]
-    df30_3$W[i]=rbinom(1,1,prob)
+  
+  prob[i]=0.002+0.005*df30_3$trt[i]+0.00021*df30_3$X1[i]+0.002*df30_3$X2[i]+0.0008*df30_3$X3[i]+0.001*df30_3$X4[i]+0.003*df30_3$X5[i]
+  
+  df30_3$W[i]=rbinom(1,1,prob)
 }
 
 ```
@@ -643,11 +644,6 @@ for(i in 1:40000)
 }
 
 ```
-
-
-
-
-
 
 ## Analysis of simulated data
 
