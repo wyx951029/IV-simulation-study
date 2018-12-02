@@ -21,16 +21,17 @@ Medicine A&B treat on the same disease but have risk of side effect W.
 ### Treatment Assignment
 ```{r}
 # Patients characteristics
-X1=rbinom(20000, size=1, prob=0.4) #gender
-X2=rbinom(20000, size=1, prob=0.1) #age >= 75
-X3=round(rnorm(20000, mean=23, sd=3)) #BMI #non-measured confounder
-X4=round(rnorm(20000, mean=130, sd=7)) #blood pressure Systolic
-X5=rbinom(20000, size=1, prob=0.1) #History of side effect related disease
+X1=rbinom(10000, size=1, prob=0.4) #gender
+X2=rbinom(10000, size=1, prob=0.1) #age >= 75
+X3=round(rnorm(10000, mean=23, sd=3)) #BMI #non-measured confounder
+X4=round(rnorm(10000, mean=130, sd=7)) #blood pressure Systolic
+X5=rbinom(10000, size=1, prob=0.1) #History of side effect related disease
 C=data.frame(cbind(X1,X2,X3,X4,X5))
+
 # Physician assignments
-patientid=c(1:20000)
-physicianid=sample(c(1:200))
-pp=sample(c(rep(0,100),rep(1,100)))
+patientid=c(1:10000)
+physicianid=sample(c(1:100))
+pp=sample(c(rep(0,50),rep(1,50)))
 df=data.frame(cbind(patientid,C,physicianid,pp))
 df$X1=as.numeric(df$X1)
 df$X2=as.numeric(df$X2)
@@ -78,9 +79,9 @@ df10_1$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df10_1$trt[i]+0.00021*df10_1$X1[i]+0.009*df10_1$X2[i]+0.001*df10_1$X3[i]+0.001*df10_1$X4[i]+0.0018*df10_1$X5[i]
     df10_1$W[i]=rbinom(1,1,prob)
@@ -94,9 +95,9 @@ df20_1$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df20_1$trt[i]+0.00021*df20_1$X1[i]+0.009*df20_1$X2[i]+0.001*df20_1$X3[i]+0.001*df20_1$X4[i]+0.0018*df20_1$X5[i]
     
@@ -112,9 +113,9 @@ df30_1$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df30_1$trt[i]+0.00021*df30_1$X1[i]+0.009*df30_1$X2[i]+0.001*df30_1$X3[i]+0.001*df30_1$X4[i]+0.0018*df30_1$X5[i]
     df30_1$W[i]=rbinom(1,1,prob)
@@ -134,9 +135,9 @@ df10_2$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df10_2$trt[i]+0.00021*df10_2$X1[i]+0.009*df10_2$X2[i]+0.002*df10_2$X3[i]+0.001*df10_2$X4[i]+0.0018*df10_2$X5[i]
     df10_2$W[i]=rbinom(1,1,prob)
@@ -150,9 +151,9 @@ df20_2$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df20_2$trt[i]+0.00021*df20_2$X1[i]+0.009*df20_2$X2[i]+0.002*df20_2$X3[i]+0.001*df20_2$X4[i]+0.0018*df20_2$X5[i]
     
@@ -168,9 +169,9 @@ df30_2$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df30_2$trt[i]+0.00021*df30_2$X1[i]+0.009*df30_2$X2[i]+0.002*df30_2$X3[i]+0.001*df30_2$X4[i]+0.0018*df30_2$X5[i]
     df30_2$W[i]=rbinom(1,1,prob)
@@ -190,9 +191,9 @@ df10_3$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df10_3$trt[i]+0.00021*df10_3$X1[i]+0.009*df10_3$X2[i]+0.003*df10_3$X3[i]+0.001*df10_3$X4[i]+0.0018*df10_3$X5[i]
     df10_3$W[i]=rbinom(1,1,prob)
@@ -206,9 +207,9 @@ df20_3$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df20_3$trt[i]+0.00021*df20_3$X1[i]+0.009*df20_3$X2[i]+0.003*df20_3$X3[i]+0.001*df20_3$X4[i]+0.0018*df20_3$X5[i]
     
@@ -224,9 +225,9 @@ df30_3$W = NA
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+prob = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
     prob[i]=0.002+0.003*df30_3$trt[i]+0.00021*df30_3$X1[i]+0.009*df30_3$X2[i]+0.003*df30_3$X3[i]+0.001*df30_3$X4[i]+0.0018*df30_3$X5[i]
     df30_3$W[i]=rbinom(1,1,prob)
@@ -234,173 +235,166 @@ for(i in 1:20000)
 
 ```
 
-### Outcome W-continuous
+### Outcome P-continuous
 
 The outcome is the PEG2 containation in patient's body
 
 ```{r Continuous outcome} 
 
-## x3 is unmeasured confounder, coefficient = 0.001
+## x3 is unmeasured confounder, coefficient = 0.02
 ## df10 
 
-df10_1 = df10
-df10_1$P = NA
+df10_4 = df10
 
 ## assuming the exclusion restriction holds
 
-peg2 = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=128.74-0.03*df10_1$trt[i]+0.0021*df10_1$X1[i]-0.09*df10_1$X2[i]+0.01*df10_1$X3[i]-0.01*df10_1$X4[i]-0.018*df10_1$X5[i]
-    df10_1$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df10_4$trt[i]+0.03*df10_4$X1[i]-0.039*df10_4$X2[i]+0.02*df10_4$X3[i]-0.12*df10_4$X4[i]-0.09*df10_4$X5[i]
 }
 
+df10_4$P=peg2
 
 ## df20
 
-df20_1 = df20 
-df20_1$W = NA
+df20_4 = df20 
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df20_1$trt[i]+0.00021*df20_1$X1[i]+0.009*df20_1$X2[i]+0.001*df20_1$X3[i]+0.001*df20_1$X4[i]+0.0018*df20_1$X5[i]
-    
-    df20_1$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df20_4$trt[i]+0.03*df20_4$X1[i]-0.039*df20_4$X2[i]+0.02*df20_4$X3[i]-0.12*df20_4$X4[i]-0.09*df20_4$X5[i]
 }
+
+df20_4$P=peg2
 
 
 
 ## df30
 
-df30_1 = df30
-df30_1$W = NA
+df30_4 = df30
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df30_1$trt[i]+0.00021*df30_1$X1[i]+0.009*df30_1$X2[i]+0.001*df30_1$X3[i]+0.001*df30_1$X4[i]+0.0018*df30_1$X5[i]
-    df30_1$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df30_4$trt[i]+0.03*df30_4$X1[i]-0.039*df30_4$X2[i]+0.02*df30_4$X3[i]-0.12*df30_4$X4[i]-0.09*df30_4$X5[i]
 }
+
+df30_4$P=peg2
 
 ```
 
 
 
-```{r}
+```{r Continuous outcome} 
 
-## x3 is unmeasured confounder, coefficient = 0.002
+## x3 is unmeasured confounder, coefficient = 0.04
 ## df10 
 
-df10_2 = df10
-df10_2$W = NA
+df10_5 = df10
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df10_2$trt[i]+0.00021*df10_2$X1[i]+0.009*df10_2$X2[i]+0.002*df10_2$X3[i]+0.001*df10_2$X4[i]+0.0018*df10_2$X5[i]
-    df10_2$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df10_5$trt[i]+0.03*df10_5$X1[i]-0.039*df10_5$X2[i]+0.04*df10_5$X3[i]-0.12*df10_5$X4[i]-0.09*df10_5$X5[i]
 }
 
+df10_5$P=peg2
 
 ## df20
 
-df20_2 = df20 
-df20_2$W = NA
+df20_5 = df20 
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df20_2$trt[i]+0.00021*df20_2$X1[i]+0.009*df20_2$X2[i]+0.002*df20_2$X3[i]+0.001*df20_2$X4[i]+0.0018*df20_2$X5[i]
-    
-    df20_2$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df20_5$trt[i]+0.03*df20_5$X1[i]-0.039*df20_5$X2[i]+0.04*df20_5$X3[i]-0.12*df20_5$X4[i]-0.09*df20_5$X5[i]
 }
+
+df20_5$P=peg2
 
 
 
 ## df30
 
-df30_2 = df30
-df30_2$W = NA
+df30_5 = df30
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df30_2$trt[i]+0.00021*df30_2$X1[i]+0.009*df30_2$X2[i]+0.002*df30_2$X3[i]+0.001*df30_2$X4[i]+0.0018*df30_2$X5[i]
-    df30_2$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df30_5$trt[i]+0.03*df30_5$X1[i]-0.039*df30_5$X2[i]+0.04*df30_5$X3[i]-0.12*df30_5$X4[i]-0.09*df30_5$X5[i]
 }
+
+df30_5$P=peg2
 
 ```
 
 
+```{r Continuous outcome} 
 
-```{r}
-
-## x3 is unmeasured confounder, coefficient = 0.003
+## x3 is unmeasured confounder, coefficient = 0.06
 ## df10 
 
-df10_3 = df10
-df10_3$W = NA
+df10_6 = df10
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df10_3$trt[i]+0.00021*df10_3$X1[i]+0.009*df10_3$X2[i]+0.003*df10_3$X3[i]+0.001*df10_3$X4[i]+0.0018*df10_3$X5[i]
-    df10_3$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df10_6$trt[i]+0.03*df10_6$X1[i]-0.039*df10_6$X2[i]+0.06*df10_6$X3[i]-0.12*df10_6$X4[i]-0.09*df10_6$X5[i]
 }
 
+df10_6$P=peg2
 
 ## df20
 
-df20_3 = df20 
-df20_3$W = NA
+df20_6 = df20 
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df20_3$trt[i]+0.00021*df20_3$X1[i]+0.009*df20_3$X2[i]+0.003*df20_3$X3[i]+0.001*df20_3$X4[i]+0.0018*df20_3$X5[i]
-    
-    df20_3$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df20_6$trt[i]+0.03*df20_6$X1[i]-0.039*df20_6$X2[i]+0.06*df20_6$X3[i]-0.12*df20_6$X4[i]-0.09*df20_6$X5[i]
 }
+
+df20_6$P=peg2
 
 
 
 ## df30
 
-df30_3 = df30
-df30_3$W = NA
+df30_6 = df30
 
 ## assuming the exclusion restriction holds
 
-prob = rep(NA, 20000)
+peg2 = rep(NA, 10000)
 
-for(i in 1:20000)
+for(i in 1:10000)
   {
-    prob[i]=0.002+0.003*df30_3$trt[i]+0.00021*df30_3$X1[i]+0.009*df30_3$X2[i]+0.003*df30_3$X3[i]+0.001*df30_3$X4[i]+0.0018*df30_3$X5[i]
-    df30_3$W[i]=rbinom(1,1,prob)
+    peg2[i]=128.74-0.2*df30_6$trt[i]+0.03*df30_6$X1[i]-0.039*df30_6$X2[i]+0.06*df30_6$X3[i]-0.12*df30_6$X4[i]-0.09*df30_6$X5[i]
 }
+
+df30_6$P=peg2
 
 ```
 ## Analysis of simulated data
