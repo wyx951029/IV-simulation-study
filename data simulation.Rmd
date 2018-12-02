@@ -449,6 +449,14 @@ bias = function(alpha3, uc, p_pp1_uc1, p_pp0_uc1, p_pp1, p_pp0){
 
 
 
+```{r}
+
+
+```
+
+
+
+
 ## Data Generation-Population size=40000
 
 ### Treatment Assignment
@@ -666,6 +674,9 @@ for(i in 1:40000)
 }
 
 ```
+
+
+
 
 ## Analysis of simulated data
 
