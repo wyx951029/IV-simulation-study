@@ -242,7 +242,7 @@ The outcome is the PEG2 containation in patient's body
 
 ```{r Continuous outcome} 
 
-## x3 is unmeasured confounder, coefficient = 0.02
+## x5 is unmeasured confounder, coefficient = 0.04
 ## df10 
 
 df10_4 = df10
@@ -253,7 +253,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df10_4$trt[i]+0.03*df10_4$X1[i]-0.039*df10_4$X2[i]+0.02*df10_4$X3[i]-0.12*df10_4$X4[i]-0.09*df10_4$X5[i]
+    peg2[i]=128.74-0.2*df10_4$trt[i]+0.04*df10_4$X1[i]-0.039*df10_4$X2[i]+0.03*df10_4$X3[i]-0.12*df10_4$X4[i]-0.04*df10_4$X5[i]
 }
 
 df10_4$P=peg2
@@ -268,7 +268,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df20_4$trt[i]+0.03*df20_4$X1[i]-0.039*df20_4$X2[i]+0.02*df20_4$X3[i]-0.12*df20_4$X4[i]-0.09*df20_4$X5[i]
+    peg2[i]=128.74-0.2*df20_4$trt[i]+0.04*df20_4$X1[i]-0.039*df20_4$X2[i]+0.03*df20_4$X3[i]-0.12*df20_4$X4[i]-0.04*df20_4$X5[i]
 }
 
 df20_4$P=peg2
@@ -285,7 +285,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df30_4$trt[i]+0.03*df30_4$X1[i]-0.039*df30_4$X2[i]+0.02*df30_4$X3[i]-0.12*df30_4$X4[i]-0.09*df30_4$X5[i]
+    peg2[i]=128.74-0.2*df30_4$trt[i]+0.04*df30_4$X1[i]-0.039*df30_4$X2[i]+0.03*df30_4$X3[i]-0.12*df30_4$X4[i]-0.04*df30_4$X5[i]
 }
 
 df30_4$P=peg2
@@ -296,7 +296,7 @@ df30_4$P=peg2
 
 ```{r Continuous outcome} 
 
-## x3 is unmeasured confounder, coefficient = 0.04
+## x5 is unmeasured confounder, coefficient = 0.08
 ## df10 
 
 df10_5 = df10
@@ -307,7 +307,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df10_5$trt[i]+0.03*df10_5$X1[i]-0.039*df10_5$X2[i]+0.04*df10_5$X3[i]-0.12*df10_5$X4[i]-0.09*df10_5$X5[i]
+    peg2[i]=128.74-0.2*df10_5$trt[i]+0.04*df10_5$X1[i]-0.039*df10_5$X2[i]+0.03*df10_5$X3[i]-0.12*df10_5$X4[i]-0.08*df10_5$X5[i]
 }
 
 df10_5$P=peg2
@@ -322,7 +322,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df20_5$trt[i]+0.03*df20_5$X1[i]-0.039*df20_5$X2[i]+0.04*df20_5$X3[i]-0.12*df20_5$X4[i]-0.09*df20_5$X5[i]
+    peg2[i]=128.74-0.2*df20_5$trt[i]+0.04*df20_5$X1[i]-0.039*df20_5$X2[i]+0.03*df20_5$X3[i]-0.12*df20_5$X4[i]-0.08*df20_5$X5[i]
 }
 
 df20_5$P=peg2
@@ -339,7 +339,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df30_5$trt[i]+0.03*df30_5$X1[i]-0.039*df30_5$X2[i]+0.04*df30_5$X3[i]-0.12*df30_5$X4[i]-0.09*df30_5$X5[i]
+    peg2[i]=128.74-0.2*df30_5$trt[i]+0.04*df30_5$X1[i]-0.039*df30_5$X2[i]+0.03*df30_5$X3[i]-0.12*df30_5$X4[i]-0.08*df30_5$X5[i]
 }
 
 df30_5$P=peg2
@@ -349,7 +349,7 @@ df30_5$P=peg2
 
 ```{r Continuous outcome} 
 
-## x3 is unmeasured confounder, coefficient = 0.06
+## x3 is unmeasured confounder, coefficient = 0.12
 ## df10 
 
 df10_6 = df10
@@ -360,7 +360,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df10_6$trt[i]+0.03*df10_6$X1[i]-0.039*df10_6$X2[i]+0.06*df10_6$X3[i]-0.12*df10_6$X4[i]-0.09*df10_6$X5[i]
+    peg2[i]=128.74-0.2*df10_6$trt[i]+0.04*df10_6$X1[i]-0.039*df10_6$X2[i]+0.03*df10_6$X3[i]-0.12*df10_6$X4[i]-0.12*df10_6$X5[i]
 }
 
 df10_6$P=peg2
@@ -375,7 +375,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df20_6$trt[i]+0.03*df20_6$X1[i]-0.039*df20_6$X2[i]+0.06*df20_6$X3[i]-0.12*df20_6$X4[i]-0.09*df20_6$X5[i]
+    peg2[i]=128.74-0.2*df20_6$trt[i]+0.04*df20_6$X1[i]-0.039*df20_6$X2[i]+0.03*df20_6$X3[i]-0.12*df20_6$X4[i]-0.12*df20_6$X5[i]
 }
 
 df20_6$P=peg2
@@ -392,7 +392,7 @@ peg2 = rep(NA, 10000)
 
 for(i in 1:10000)
   {
-    peg2[i]=128.74-0.2*df30_6$trt[i]+0.03*df30_6$X1[i]-0.039*df30_6$X2[i]+0.06*df30_6$X3[i]-0.12*df30_6$X4[i]-0.09*df30_6$X5[i]
+    peg2[i]=128.74-0.2*df30_6$trt[i]+0.04*df30_6$X1[i]-0.039*df30_6$X2[i]+0.03*df30_6$X3[i]-0.12*df30_6$X4[i]-0.12*df30_6$X5[i]
 }
 
 df30_6$P=peg2
@@ -417,12 +417,34 @@ Ideal model
 ## df10_1, df10_2,df10_3, df20_1, df20_2,df20_3, df30_1, df30_2,df30_3
 
 ideal_model = function(data){
-  m1 = lm(W~.-patientid - physicianid - pp, data = data)
-  summary(m1)
+  m = lm(P~.-patientid - physicianid - pp, data = data)
+  summary(m)
 }
 
-ideal_model(df10_1)
+conv_model = function(data){
+  m = lm(P~.-patientid - physicianid - pp - X5, data = data)
+  summary(m2)
+}
 
+ideal_model_b = function(data){
+  m = glm(W~.-patientid - physicianid - pp, data = data, family = "binomial")
+  summary(m)
+}
+
+conv_model_b = function(data){
+  m = glm(W~.-patientid - physicianid - pp - X5, data = data, family = "binomial")
+  summary(m)
+}
+
+RMSE = function(y, ypred) {
+  RMSE <- sqrt(mean((y - ypred)^2))
+  return(RMSE)
+}
+
+bias = function(alpha3, uc, p_pp1_uc1, p_pp0_uc1, p_pp1, p_pp0){
+  b = alpha3*mean(uc)*(((p_pp1_uc1-p_pp0_uc1)/(p_pp1-p_pp0))-1)
+  return(b)
+}
 ```
 
 
