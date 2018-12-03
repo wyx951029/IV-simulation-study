@@ -43,20 +43,23 @@ df20=df
 df20$trt=NA
 df30=df
 df30$trt=NA
+
 # treatment assignment
-for(i in 1:(0.9*nrow(df10)))
+for(i in 1:nrow(df10))
     {
-    prob=0.02+0.7*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
+    prob=0.02+0.3*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
     df10$trt[i]=rbinom(1,1,prob)
   }
-df10$trt[is.na(df10$trt)]=1
-for(i in 1:(0.8*nrow(df20)))
+
+
+for(i in 1:nrow(df20))
     {
-    prob=0.02+0.7*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
+    prob=0.02+0.5*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
     df20$trt[i]=rbinom(1,1,prob)
   }
-df20$trt[is.na(df20$trt)]=1
-for(i in 1:(0.7*nrow(df30)))
+
+
+for(i in 1:nrow(df30))
     {
     prob=0.02+0.7*df30$pp[i]+0.02*df30$X1[i]-0.012*df30$X2[i]+0.006*df30$X3[i]-0.0005*df30$X4[i]-0.03*df30$X5[i]
     df30$trt[i]=rbinom(1,1,prob)
@@ -411,26 +414,29 @@ We compare the results from implementing the three models.
 
 
 ```{r, functions}
-## df10_1, df10_2,df10_3, df20_1, df20_2,df20_3, df30_1, df30_2,df30_3
+sample = function(data){
+  df = sample_n(data, 1000)
+  return(df)
+}
 
 ideal_model = function(data){
   m = lm(P~.-patientid - physicianid - pp, data = data)
-  summary(m)
+  return(m)
 }
 
 conv_model = function(data){
   m = lm(P~.-patientid - physicianid - pp - X5, data = data)
-  summary(m2)
+  return(m)
 }
 
 ideal_model_b = function(data){
   m = glm(W~.-patientid - physicianid - pp, data = data, family = "binomial")
-  #summary(m)
+  return(m)
 }
 
 conv_model_b = function(data){
   m = glm(W~.-patientid - physicianid - pp - X5, data = data, family = "binomial")
-  #summary(m)
+  return(m)
 }
 
 RMSE = function(y, ypred) {
@@ -455,20 +461,42 @@ bias_b = function(data,alpha3){
   b = alpha3*mean(data$X5)*(((r_pp1_uc1-r_pp0_uc1)/(r_pp1-r_pp0))-1)
   return(b)
 }
+
+pbias = function(rd_true, alpha){
+  p = (alpha-rd_true)/rd_true*100
+  return(p)
+}
 ```
 
 ```{r, analysis}
-r_df10_1i=ideal_model_b(df10_1)
-r_df20_1i=ideal_model_b(df20_1)
-r_df30_1i=ideal_model_b(df30_1)
+set.seed(15)
 
-r_df10_1c=conv_model_b(df10_1)
-r_df20_1c=conv_model_b(df20_1)
-r_df30_1c=conv_model_b(df30_1)
+df10000=list(df10_1,df20_1,df30_1,df10_2,df20_2,df30_2,df10_3,df20_3,df30_3)
 
-RMSE(r_df10_1i$fitted.values, df10_1$W)
-RMSE(r_df10_1c$fitted.values, df10_1$W)
+drmse=matrix(NA, nrow=9, ncol=2)
 
-bias_b(df10_1,summary(r_df10_1i)$coefficients[6])
-bias_b(df10_1,summary(r_df10_1c)$coefficients[6])
+for(i in 1:9){
+  drmse[i,1]=RMSE(ideal_model_b(sample(df10000[[i]]))$fitted.values, df10000[[i]]$W)
+  drmse[i,2]=RMSE(conv_model_b(sample(df10000[[i]]))$fitted.values, df10000[[i]]$W)
+}
+
+drmse=data.frame(drmse)
+
+dbias=matrix(NA, nrow=9, ncol=2)
+
+for (i in 1:9){
+  dbias[i,1]=bias_b(df10000[[i]], summary(ideal_model_b(sample(df10000[[i]])))$coefficients[6])
+  dbias[i,2]=bias_b(df10000[[i]], summary(conv_model_b(sample(df10000[[i]])))$coefficients[6])
+}
+
+dbias=data.frame(dbias)
+
+row.names(drmse)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+colnames(drmse)=c("IV model","Conventional model")
+
+row.names(dbias)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+colnames(dbias)=c("IV model","Conventional model")
+
+kable(drmse, caption="RMSE of models", align="c")
+kable(dbias, caption="Bias of models", align="c")
 ```
