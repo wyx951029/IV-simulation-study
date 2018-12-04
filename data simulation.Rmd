@@ -11,6 +11,7 @@ library(dplyr)
 library(SimDesign)
 suppressWarnings(library(ggplot2))
 suppressWarnings(library(knitr))
+library(AER)
 ```
 
 
@@ -116,7 +117,7 @@ df30[is.na(df30)]=1
 The outcome is whether the side effect appears
 ```{r Relatively frequent binary outcome} 
 
-## x3 is unmeasured confounder, coefficient = 0.3
+## x5 is unmeasured confounder, coefficient = 0.007
 ## df10 
 
 df10_1 = df10
@@ -165,7 +166,9 @@ for(i in 1:10000)
 
 ```{r}
 
-## x3 is unmeasured confounder, coefficient = 0.4
+
+## x5 is unmeasured confounder, coefficient = -0.008
+
 ## df10 
 
 df10_2 = df10
@@ -211,7 +214,9 @@ for(i in 1:10000)
 
 ```{r}
 
-## x3 is unmeasured confounder, coefficient = 0.5
+
+## x5 is unmeasured confounder, coefficient = -0.009
+
 ## df10 
 
 df10_3 = df10
@@ -247,7 +252,7 @@ df30_3$W = NA
 
 for(i in 1:10000)
   {
-  df30_3$W[i]=0.6117-0.01168*df30_3$trt[i]+0.007015*df30_3$X1[i]-0.004434*df30_3$X2[i]+0.003041*df30_3$X3[i]-0.002339*df30_3$X4[i]-0.009/*df30_3$X5[i]
+  df30_3$W[i]=0.6117-0.01168*df30_3$trt[i]+0.007015*df30_3$X1[i]-0.004434*df30_3$X2[i]+0.003041*df30_3$X3[i]-0.002339*df30_3$X4[i]-0.009*df30_3$X5[i]
 }
 
 ```
@@ -265,33 +270,12 @@ Equation (2).
 
 We compare the results from implementing the three models. 
 
-```{r, analysis}
+```{r, warning= FALSE}
 set.seed(15)
 
 df10000=list(df10_1,df20_1,df30_1,df10_2,df20_2,df30_2,df10_3,df20_3,df30_3)
 
-<<<<<<< HEAD
-    
-```{r, functions}
-## df10_1, df10_2,df10_3, df20_1, df20_2,df20_3, df30_1, df30_2,df30_3
-
-ideal_model = function(data){
-  m = lm(P~.-patientid - physicianid - pp, data = data)
-  summary(m)
-}
-
-conv_model = function(data){
-  m = lm(P~.-patientid - physicianid - pp - X5, data = data)
-  summary(m2)
-}
-
-ideal_model_b = function(data){
-  m = glm(W~.-patientid - physicianid - pp, data = data, family = "binomial")
-  #summary(m)
-}
-=======
 drmse=matrix(NA, nrow=9, ncol=3)
->>>>>>> 6d52d10b0a71fa8407125820a81b392a8d9c562d
 
 dfi=matrix(NA, nrow=1000, ncol=9)
 dfc=matrix(NA, nrow=1000, ncol=9)
@@ -314,33 +298,25 @@ dpb=matrix(NA, nrow=9, ncol=3)
 dfi=matrix(NA, nrow=1000, ncol=9)
 dfc=matrix(NA, nrow=1000, ncol=9)
 dfiv=matrix(NA, nrow=1000, ncol=9)
+# dbias=matrix(NA, nrow = 9, ncol=3)
 
 for (i in 1:1000){
   for(j in 1:9){
     dfi[i,j]=pbias(-0.01168, summary(ideal_model(samp(df10000[[j]])))$coefficients[7])
     dfc[i,j]=pbias(-0.01168, summary(conv_model(samp(df10000[[j]])))$coefficients[6])
     dfiv[i,j]=pbias(-0.01168, summary(IV_model(samp(df10000[[j]])))$coefficients[6])
-    dbias[j,1]=mean(dfi[,j])
-    dbias[j,2]=mean(dfc[,j])
-    dbias[j,3]=mean(dfiv[,j])
+    # dbias[j,1]=mean(dfi[,j])
+    # dbias[j,2]=mean(dfc[,j])
+    # dbias[j,3]=mean(dfiv[,j])
   }
 }
 
 dpb=data.frame(dpb)
 
-<<<<<<< HEAD
 
 
-
-We select three 
-```{r, analysis}
-r_df10_1i=ideal_model_b(df10_1)
-r_df20_1i=ideal_model_b(df20_1)
-r_df30_1i=ideal_model_b(df30_1)
-=======
 row.names(drmse)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
 colnames(drmse)=c("IV model","Conventional model")
->>>>>>> 6d52d10b0a71fa8407125820a81b392a8d9c562d
 
 row.names(dbias)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
 colnames(dbias)=c("IV model","Conventional model")
@@ -348,26 +324,6 @@ colnames(dbias)=c("IV model","Conventional model")
 row.names(dpb)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
 colnames(dpb)=c("IV model","Conventional model")
 
-<<<<<<< HEAD
-bias_b(df10_1,summary(r_df10_1i)$coefficients[6])
-bias_b(df10_1,summary(r_df10_1c)$coefficients[6])
-```
-
-
-
-
-## Data Generation-Population size=40000
-
-
-
-
-
-
-
-
-
-=======
 #kable(drmse, caption="RMSE of models", align="c")
 #kable(dpb, caption="Bias of models", align="c")
 ```
->>>>>>> 6d52d10b0a71fa8407125820a81b392a8d9c562d
