@@ -92,7 +92,7 @@ df30$trt=NA
 # treatment assignment
 for(i in 1:(0.8*nrow(df10)))
     {
-    prob=0.02+0.3*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
+    prob=0.02+-0.07*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
     df10$trt[i]=rbinom(1,1,prob)
 }
 df10[is.na(df10)]=1
@@ -315,13 +315,10 @@ for (i in 1:1000){
 dpb=data.frame(dpb)
 
 
-row.names(drmse)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+row.names(drmse)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
 colnames(drmse)=c("Ideal model","Conventional model","IV model")
 
-# row.names(dbias)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
-# colnames(dbias)=c("Ideal model","IV model","Conventional model")
-
-row.names(dpb)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+row.names(dpb)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
 colnames(dpb)=c("Ideal model","Conventional model","IV model")
 
 write.csv(drmse, file = "RMSE_10000.csv")
