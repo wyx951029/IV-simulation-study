@@ -17,7 +17,7 @@ library(AER)
 
 ```{r, functions}
 samp = function(data){
-  sp=sample(1:10000, 10000, replace = TRUE)
+  sp=sample(1:40000, 40000, replace = TRUE)
   df = data[sp,]
   return(df)
 }
@@ -59,22 +59,22 @@ pbias = function(true_rd, alpha){
 
 Medicine A&B treat on the same disease but have risk of side effect W.
 
-## Data Generation-Population size=10000
+## Data Generation-Population size=40000
 
 ### Treatment Assignment
 ```{r}
 # Patients characteristics
-X1=rbinom(10000, size=1, prob=0.4) # gender
-X2=rbinom(10000, size=1, prob=0.1) # age >= 75
-X3=round(rnorm(10000, mean=23, sd=3)) # BMI 
-X4=round(rnorm(10000, mean=130, sd=7)) # blood pressure systolic
-X5=rbinom(10000, size=1, prob=0.1) # history of side effect related disease # unmeasured confounder 
+X1=rbinom(40000, size=1, prob=0.4) # gender
+X2=rbinom(40000, size=1, prob=0.1) # age >= 75
+X3=round(rnorm(40000, mean=23, sd=3)) # BMI 
+X4=round(rnorm(40000, mean=130, sd=7)) # blood pressure systolic
+X5=rbinom(40000, size=1, prob=0.1) # history of side effect related disease # unmeasured confounder 
 C=data.frame(cbind(X1,X2,X3,X4,X5)) 
 
 # Physician assignments
-patientid=c(1:10000)
-physicianid=sample(c(1:100))
-pp=sample(c(rep(0,50),rep(1,50)))
+patientid=c(1:40000)
+physicianid=sample(c(1:400))
+pp=sample(c(rep(0,200),rep(1,200)))
 df=data.frame(cbind(patientid,C,physicianid,pp))
 df$X1=as.numeric(df$X1)
 df$X2=as.numeric(df$X2)
@@ -125,12 +125,8 @@ df10_1$W = NA
 
 ## assuming the exclusion restriction holds
 
-#for(i in 1:10000)
-#  {
-#    df10_1$W[i]=1/(1+exp(-(0.5-0.05*df10_1$trt[i]+0.03*df10_1$X1[i]-0.019*df10_1$X2[i]+0.013*df10_1$X3[i]-0.01*df10_1$X4[i]-0.03*df10_1$X5[i])))
-#}
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
     df10_1$W[i]=0.6117-0.01168*df10_1$trt[i]+0.007015*df10_1$X1[i]-0.004434*df10_1$X2[i]+0.003041*df10_1$X3[i]-0.002339*df10_1$X4[i]-0.007*df10_1$X5[i]
 }
@@ -142,7 +138,7 @@ df20_1$W = NA
 
 ## assuming the exclusion restriction holds
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
   df20_1$W[i]=0.6117-0.01168*df20_1$trt[i]+0.007015*df20_1$X1[i]-0.004434*df20_1$X2[i]+0.003041*df20_1$X3[i]-0.002339*df20_1$X4[i]-0.007*df20_1$X5[i]
 }
@@ -155,7 +151,7 @@ df30_1$W = NA
 
 ## assuming the exclusion restriction holds
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
    df30_1$W[i]=0.6117-0.01168*df30_1$trt[i]+0.007015*df30_1$X1[i]-0.004434*df30_1$X2[i]+0.003041*df30_1$X3[i]-0.002339*df30_1$X4[i]-0.007*df30_1$X5[i]
 }
@@ -176,7 +172,7 @@ df10_2$W = NA
 
 ## assuming the exclusion restriction holds
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
   
   df10_2$W[i]=0.6117-0.01168*df10_2$trt[i]+0.007015*df10_2$X1[i]-0.004434*df10_2$X2[i]+0.003041*df10_2$X3[i]-0.002339*df10_2$X4[i]-0.008*df10_2$X5[i]
@@ -191,7 +187,7 @@ df20_2$W = NA
 
 ## assuming the exclusion restriction holds
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
   df20_2$W[i]=0.6117-0.01168*df20_2$trt[i]+0.007015*df20_2$X1[i]-0.004434*df20_2$X2[i]+0.003041*df20_2$X3[i]-0.002339*df20_2$X4[i]-0.008*df20_2$X5[i]
 }
@@ -203,7 +199,7 @@ df30_2$W = NA
 
 ## assuming the exclusion restriction holds
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
   df30_2$W[i]=0.6117-0.01168*df30_2$trt[i]+0.007015*df30_2$X1[i]-0.004434*df30_2$X2[i]+0.003041*df30_2$X3[i]-0.002339*df30_2$X4[i]-0.008*df30_2$X5[i]
 }
@@ -224,7 +220,7 @@ df10_3$W = NA
 
 ## assuming the exclusion restriction holds
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
   df10_3$W[i]=0.6117-0.01168*df10_3$trt[i]+0.007015*df10_3$X1[i]-0.004434*df10_3$X2[i]+0.003041*df10_3$X3[i]-0.002339*df10_3$X4[i]-0.009*df10_3$X5[i]
 }
@@ -236,7 +232,7 @@ df20_3$W = NA
 
 ## assuming the exclusion restriction holds
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
   df20_3$W[i]=0.6117-0.01168*df20_3$trt[i]+0.007015*df20_3$X1[i]-0.004434*df20_3$X2[i]+0.003041*df20_3$X3[i]-0.002339*df20_3$X4[i]-0.009*df20_3$X5[i]
 }
@@ -250,7 +246,7 @@ df30_3$W = NA
 
 ## assuming the exclusion restriction holds
 
-for(i in 1:10000)
+for(i in 1:40000)
   {
   df30_3$W[i]=0.6117-0.01168*df30_3$trt[i]+0.007015*df30_3$X1[i]-0.004434*df30_3$X2[i]+0.003041*df30_3$X3[i]-0.002339*df30_3$X4[i]-0.009*df30_3$X5[i]
 }
@@ -273,7 +269,7 @@ We compare the results from implementing the three models.
 ```{r, warning= FALSE}
 set.seed(15)
 
-df10000=list(df10_1,df20_1,df30_1,df10_2,df20_2,df30_2,df10_3,df20_3,df30_3)
+df40000=list(df10_1,df20_1,df30_1,df10_2,df20_2,df30_2,df10_3,df20_3,df30_3)
 
 drmse=matrix(NA, nrow=9, ncol=3)
 
@@ -283,17 +279,18 @@ dfiv=matrix(NA, nrow=1000, ncol=9)
 
 for (i in 1:1000){
   for(j in 1:9){
-    dfi[i,j]=RMSE(df10000[[j]]$W, ideal_model(samp(df10000[[j]]))$fitted.values)
-    dfc[i,j]=RMSE(df10000[[j]]$W, conv_model(samp(df10000[[j]]))$fitted.values)
-    dfiv[i,j]=RMSE(df10000[[j]]$W,IV_model(samp(df10000[[j]]))$fitted.values)
+    dfi[i,j]=RMSE(df40000[[j]]$W, ideal_model(samp(df40000[[j]]))$fitted.values)
+    dfc[i,j]=RMSE(df40000[[j]]$W, conv_model(samp(df40000[[j]]))$fitted.values)
+    dfiv[i,j]=RMSE(df40000[[j]]$W,IV_model(samp(df40000[[j]]))$fitted.values)
     drmse[j,1]=mean(dfi[,j])
     drmse[j,2]=mean(dfc[,j])
     drmse[j,3]=mean(dfiv[,j])
   }
 }
 
-drmse=data.frame(drmse)
+drmse_40000=data.frame(drmse)
 
+write.csv(drmse_40000, file = "RMSE_40000.csv")
 
 dpb=matrix(NA, nrow=9, ncol=3)
 dfi=matrix(NA, nrow=1000, ncol=9)
@@ -303,30 +300,28 @@ dfiv=matrix(NA, nrow=1000, ncol=9)
 
 for (i in 1:1000){
   for(j in 1:9){
-    dfi[i,j]=pbias(-0.01168, summary(ideal_model(samp(df10000[[j]])))$coefficients[7])
-    dfc[i,j]=pbias(-0.01168, summary(conv_model(samp(df10000[[j]])))$coefficients[6])
-    dfiv[i,j]=pbias(-0.01168, summary(IV_model(samp(df10000[[j]])))$coefficients[6])
+    dfi[i,j]=pbias(-0.01168, summary(ideal_model(samp(df40000[[j]])))$coefficients[7])
+    dfc[i,j]=pbias(-0.01168, summary(conv_model(samp(df40000[[j]])))$coefficients[6])
+    dfiv[i,j]=pbias(-0.01168, summary(IV_model(samp(df40000[[j]])))$coefficients[6])
     dpb[j,1]=mean(dfi[,j])
     dpb[j,2]=mean(dfc[,j])
     dpb[j,3]=mean(dfiv[,j])
   }
 }
 
-dpb=data.frame(dpb)
+dpb_40000=data.frame(dpb)
+
+write.csv(drmse_40000, file = "dpb_40000.csv")
 
 
 row.names(drmse)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
-colnames(drmse)=c("Ideal model","Conventional model","IV model")
+colnames(drmse)=c("Ideal model","IV model","Conventional model")
 
-# row.names(dbias)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
-# colnames(dbias)=c("Ideal model","IV model","Conventional model")
+row.names(dbias)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+colnames(dbias)=c("Ideal model","IV model","Conventional model")
 
 row.names(dpb)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
-colnames(dpb)=c("Ideal model","Conventional model","IV model")
-
-write.csv(drmse, file = "RMSE_10000.csv")
-
-write.csv(dpb, file = "dpb_10000.csv")
+colnames(dpb)=c("Ideal model","IV model","Conventional model")
 
 #kable(drmse, caption="RMSE of models", align="c")
 #kable(dpb, caption="Bias of models", align="c")
