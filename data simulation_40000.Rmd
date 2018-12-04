@@ -290,7 +290,7 @@ for (i in 1:1000){
 
 drmse_40000=data.frame(drmse)
 
-write.csv(drmse_40000, file = "RMSE_40000.csv")
+
 
 dpb=matrix(NA, nrow=9, ncol=3)
 dfi=matrix(NA, nrow=1000, ncol=9)
@@ -311,17 +311,21 @@ for (i in 1:1000){
 
 dpb_40000=data.frame(dpb)
 
-write.csv(drmse_40000, file = "dpb_40000.csv")
 
 
-row.names(drmse)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
-colnames(drmse)=c("Ideal model","IV model","Conventional model")
+row.names(drmse_40000)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+colnames(drmse_40000)=c("Ideal model","Conventional model","IV model")
 
-row.names(dbias)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
-colnames(dbias)=c("Ideal model","IV model","Conventional model")
+# row.names(dbias)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+# colnames(dbias)=c("Ideal model","IV model","Conventional model")
 
-row.names(dpb)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
-colnames(dpb)=c("Ideal model","IV model","Conventional model")
+row.names(dpb_40000)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+colnames(dpb_40000)=c("Ideal model","Conventional model","IV model")
+
+
+write.csv(dpb_40000, file = "dpb_40000.csv")
+write.csv(drmse_40000, file = "RMSE_40000.csv")
+
 
 #kable(drmse, caption="RMSE of models", align="c")
 #kable(dpb, caption="Bias of models", align="c")
