@@ -53,7 +53,7 @@ Medicine A&B treat on the same disease but have risk of side effect Y.
 ## Data Generation-Population size=40000
 
 ### Treatment Assignment
-```{r}
+```{r,warning= FALSE}
 # Patients characteristics
 X1=rbinom(40000, size=1, prob=0.4) # gender
 X2=rbinom(40000, size=1, prob=0.1) # age >= 75
@@ -313,7 +313,95 @@ colnames(dpb_40000)=c("Ideal model","Conventional model","IV model")
 
 write.csv(dpb_40000, file = "dpb_40000.csv")
 write.csv(drmse_40000, file = "RMSE_40000.csv")
+
+
+## coverage
+
+
+# Coverage Rate
+
+# % of times across 1000 simulation when the 95%CI includes the true RD
+
+
+
+cr = matrix(NA, nrow=9, ncol=3)
+
+ideal_model_cr = function(data){
+  m = lm(Y~.-patientid - physicianid - pp, data = data)
+  conf = confint(m, 'trt', level=0.95)
+  coverage = ifelse(as.numeric(conf[1]) <= -0.01168  & -0.01168 <= round(as.numeric(conf[2]),5),1,0)
+  return(coverage)
+}
+
+conv_model_cr = function(data){
+  m = lm(Y~.-patientid - physicianid - pp - X5, data = data)
+  conf = confint(m, 'trt', level=0.95)
+  coverage = ifelse(as.numeric(conf[1]) <= -0.01168  & -0.01168 <= as.numeric(conf[2]),1,0)
+  return(coverage)
+}
+
+
+
+
+
+IV_model_cr = function(data){
+  m = ivreg(Y~.-patientid - physicianid - pp - X5| X1+X2+X3+X4+pp, data=data)
+  conf = confint(m, 'trt', level=0.95)
+  coverage = ifelse(as.numeric(conf[1]) <= as.numeric(-0.01168)  & -0.01168 <= as.numeric(conf[2]),1,0)
+  return(coverage)
+}
+
+
+cr_function = function(co){
+  cr = sum(co[co == 1])/1000
+  return(cr)
+}
+
+
+coi=matrix(NA, nrow=1000, ncol=9)
+coc=matrix(NA, nrow=1000, ncol=9)
+coiv=matrix(NA, nrow=1000, ncol=9)
+
+
+
+for (i in 1:1000){
+  for (j in 1:9){
+    coi[i,j] = ideal_model_cr(samp(df40000[[j]]))
+    coc[i,j] = conv_model_cr(samp(df40000[[j]]))
+    coiv[i,j] = IV_model_cr((samp(df40000[[j]])))
+    cr[j,1]=cr_function(coi[,j])
+    cr[j,2]=cr_function(coc[,j])
+    cr[j,3]=cr_function(coiv[,j])
+  }
+}
+
+cr = as.data.frame(cr)
+row.names(cr)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
+colnames(cr)=c("Ideal model","Conventional model","IV model")
+
+write.csv(cr, file = "cr_40000.csv")
+
+
+
+
+iv40000=matrix(NA, nrow=1000, ncol=9)
+
+for (i in 1:1000){
+  for (j in 1:9){
+    iv40000[i,j]=pbias(-0.01168, summary(IV_model(samp(df40000[[j]])))$coefficients[6])
+  }
+}
+
+iv40000=data.frame(iv40000)
+colnames(iv40000)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
+
+write.csv(iv40000, file="iv40000.csv")
+
+
 ```
+
+
+
 
 Visualization of the data
 ```{r}
