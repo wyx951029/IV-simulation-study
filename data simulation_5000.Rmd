@@ -62,7 +62,7 @@ Medicine A&B treat on the same disease but have risk of side effect Y.
 ## Data Generation-Population size=5000
 
 ### Treatment Assignment
-```{r}
+```{r, warning= FALSE}
 # Patients characteristics
 X1=rbinom(5000, size=1, prob=0.4) # gender
 X2=rbinom(5000, size=1, prob=0.1) # age >= 75
@@ -115,6 +115,7 @@ df30[is.na(df30)]=1
 ### Outcome Y-binary
 
 The outcome is whether the side effect appears
+
 ```{r Relatively frequent binary outcome} 
 
 ## x5 is unmeasured confounder, coefficient = 0.007
@@ -161,7 +162,6 @@ for(i in 1:5000)
 
 
 ```{r}
-
 
 ## x5 is unmeasured confounder, coefficient = -0.008
 
@@ -396,6 +396,7 @@ colnames(cr)=c("Ideal model","Conventional model","IV model")
 
 write.csv(cr, file = "cr_5000.csv")
 
+<<<<<<< HEAD
 ```
 
 Visualization of the data
@@ -414,3 +415,6 @@ colnames(iv5000)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5
 write.csv(iv5000, file="iv5000.csv")
 
 ```
+=======
+```
+>>>>>>> 060483012bed6e299a7fd1430acf008e15ad19a8
