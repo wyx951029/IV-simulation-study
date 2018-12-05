@@ -33,7 +33,7 @@ conv_model = function(data){
 }
 
 IV_model = function(data){
-  m = ivreg(W~.-patientid - physicianid - pp - X5 | X1+X2+X3+X4+pp, data=data)
+  m = ivreg(Y~X1+X2+X3+X4+trt| X1+X2+X3+X4+pp, data=data)
   return(m)
 }
 
