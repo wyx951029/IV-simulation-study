@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(readr)
 library(tidyr)
+iv1000=read_csv("iv1000.csv")
 iv5000=read_csv("iv5000.csv")
 iv10000=read_csv("iv10000.csv")
 iv40000=read_csv("iv40000.csv")
@@ -19,23 +20,37 @@ iv40000=iv40000[,2:10]
 ```
 
 ```{r}
-dfstrong=data.frame(cbind(iv5000$`pp=0.7,uc=-0.09`,iv10000$`pp=0.7,uc=-0.09`,iv40000$`pp=0.7,uc=-0.09`))
-dfmedium=data.frame(cbind(iv5000$`pp=0.5,uc=-0.08`,iv10000$`pp=0.5,uc=-0.08`,iv40000$`pp=0.5,uc=-0.08`))
-dfweak=data.frame(cbind(iv5000$`pp=0.3,uc=-0.07`,iv10000$`pp=0.3,uc=-0.07`,iv40000$`pp=0.3,uc=-0.07`))
+dfstrong=data.frame(cbind(iv1000$`ex=0.2,uc=-0.09`,iv5000$`ex=0.2,uc=-0.09`,iv10000$`ex=0.2,uc=-0.09`,iv40000$`ex=0.2,uc=-0.09`))
+dfmedium=data.frame(cbind(iv1000$`ex=0.3,uc=-0.08`,iv5000$`ex=0.3,uc=-0.08`,iv10000$`ex=0.3,uc=-0.08`,iv40000$`ex=0.3,uc=-0.08`))
+dfweak=data.frame(cbind(iv1000$`ex=0.4,uc=-0.07`,iv5000$`ex=0.4,uc=-0.07`,iv10000$`ex=0.4,uc=-0.07`,iv40000$`ex=0.4,uc=-0.07`))
 
-colnames(dfstrong)=c(5000,10000,40000)
-colnames(dfmedium)=c(5000,10000,40000)
-colnames(dfweak)=c(5000,10000,40000)
+colnames(dfstrong)=c(1000,5000,10000,40000)
+colnames(dfmedium)=c(1000,5000,10000,40000)
+colnames(dfweak)=c(1000,5000,10000,40000)
 
-strong=gather(dfstrong, "size", "bias", 1:3)
-medium=gather(dfmedium, "size", "bias", 1:3)
-weak=gather(dfweak, "size", "bias", 1:3)
+strong=gather(dfstrong, "size", "bias", 1:4)
+medium=gather(dfmedium, "size", "bias", 1:4)
+weak=gather(dfweak, "size", "bias", 1:4)
 
 ggplot(strong, aes(x=size, y=bias)) +
   geom_boxplot() +
   theme_bw()  +
   theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=16))+
-  scale_x_discrete(limits = c("5000","10000","40000"))+
+  scale_x_discrete(limits = c("1000","5000","10000","40000"))+
+  labs(title="How does bias vary across different sample size?",x="Size", y="Bias")
+
+ggplot(medium, aes(x=size, y=bias)) +
+  geom_boxplot() +
+  theme_bw()  +
+  theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=16))+
+  scale_x_discrete(limits = c("1000","5000","10000","40000"))+
+  labs(title="How does bias vary across different sample size?",x="Size", y="Bias")
+
+ggplot(weak, aes(x=size, y=bias)) +
+  geom_boxplot() +
+  theme_bw()  +
+  theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=16))+
+  scale_x_discrete(limits = c("1000","5000","10000","40000"))+
   labs(title="How does bias vary across different sample size?",x="Size", y="Bias")
   
 ```
