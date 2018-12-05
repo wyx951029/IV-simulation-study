@@ -115,6 +115,7 @@ df30[is.na(df30)]=1
 ### Outcome Y-binary
 
 The outcome is whether the side effect appears
+
 ```{r Relatively frequent binary outcome} 
 
 ## x5 is unmeasured confounder, coefficient = 0.007
@@ -161,7 +162,6 @@ for(i in 1:5000)
 
 
 ```{r}
-
 
 ## x5 is unmeasured confounder, coefficient = -0.008
 

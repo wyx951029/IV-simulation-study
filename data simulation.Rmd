@@ -216,7 +216,6 @@ for(i in 1:10000)
 
 ```{r}
 
-
 ## x5 is unmeasured confounder, coefficient = -0.009
 
 ## df10 
@@ -273,7 +272,7 @@ Equation (2).
 We compare the results from implementing the three models. 
 
 ```{r, warning= FALSE}
-set.seed(25)
+set.seed(15)
 
 df10000=list(df10_1,df20_1,df30_1,df10_2,df20_2,df30_2,df10_3,df20_3,df30_3)
 
@@ -352,23 +351,25 @@ cr = matrix(NA, nrow=9, ncol=3)
 ideal_model_cr = function(data){
   m = lm(Y~.-patientid - physicianid - pp, data = data)
   conf = confint(m, 'trt', level=0.95)
-  coverage = ifelse(as.numeric(conf[1]) <= as.numeric(-0.01168)  & as.numeric(-0.01168) <= round(as.numeric(conf[2]),5),1,0)
+  coverage = ifelse(as.numeric(conf[1]) <= -0.01168  & -0.01168 <= round(as.numeric(conf[2]),5),1,0)
   return(coverage)
 }
-
 
 conv_model_cr = function(data){
   m = lm(Y~.-patientid - physicianid - pp - X5, data = data)
   conf = confint(m, 'trt', level=0.95)
-  coverage = ifelse(as.numeric(conf[1]) <= as.numeric(-0.01168)  & as.numeric(-0.01168) <= as.numeric(conf[2]),5,1,0)
+  coverage = ifelse(as.numeric(conf[1]) <= -0.01168  & -0.01168 <= as.numeric(conf[2]),1,0)
   return(coverage)
 }
+
+
+
 
 
 IV_model_cr = function(data){
   m = ivreg(Y~.-patientid - physicianid - pp - X5| X1+X2+X3+X4+pp, data=data)
   conf = confint(m, 'trt', level=0.95)
-  coverage = ifelse(as.numeric(conf[1]) <= as.numeric(-0.01168)  & as.numeric(-0.01168) <= as.numeric(conf[2]),1,0)
+  coverage = ifelse(as.numeric(conf[1]) <= as.numeric(-0.01168)  & -0.01168 <= as.numeric(conf[2]),1,0)
   return(coverage)
 }
 
