@@ -1,0 +1,415 @@
+---
+title: "data simulation_1000"
+author: "Yixuan Wang"
+date: "11/29/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(SimDesign)
+suppressWarnings(library(ggplot2))
+suppressWarnings(library(knitr))
+library(AER)
+```
+
+
+```{r, functions}
+
+
+samp = function(data){
+  sp=sample(1:1000,1000, replace = TRUE)
+  df = data[sp,]
+  return(df)
+}
+
+ideal_model = function(data){
+  m = lm(Y~.-patientid - physicianid - pp, data = data)
+  return(m)
+}
+
+conv_model = function(data){
+  m = lm(Y~.-patientid - physicianid - pp - X5, data = data)
+  return(m)
+}
+
+IV_model = function(data){
+  m = ivreg(Y~X1+X2+X3+X4+trt| X1+X2+X3+X4+pp, data=data)
+  return(m)
+}
+
+RMSE = function(y, ypred) {
+  RMSE <- sqrt(mean((y - ypred)^2))
+  return(RMSE)
+}
+
+pbias = function(true_rd, alpha){
+  p = ((alpha-true_rd)/true_rd)*100
+  return(p)
+}
+```
+
+Medicine A&B treat on the same disease but have risk of side effect Y.
+
+## Data Generation-Population size=1000
+
+### Treatment Assignment
+```{r,warning=FALSE}
+# Patients characteristics
+X1=rbinom(1000, size=1, prob=0.4) # gender
+X2=rbinom(1000, size=1, prob=0.1) # age >= 75
+X3=round(rnorm(1000, mean=23, sd=3)) # BMI 
+X4=round(rnorm(1000, mean=130, sd=7)) # blood pressure systolic
+X5=rbinom(1000, size=1, prob=0.1) # history of side effect related disease # unmeasured confounder 
+C=data.frame(cbind(X1,X2,X3,X4,X5)) 
+
+# Physician assignments
+patientid=c(1:1000)
+physicianid=sample(c(1:10))
+pp=sample(c(rep(0,5),rep(1,5)))
+df=data.frame(cbind(patientid,C,physicianid,pp))
+df$X1=as.numeric(df$X1)
+df$X2=as.numeric(df$X2)
+df$X3=as.numeric(df$X3)
+df$X4=as.numeric(df$X4)
+df$X5=as.numeric(df$X5)
+df$pp=as.numeric(df$pp)
+df10=df
+df10$trt=NA
+df20=df
+df20$trt=NA
+df30=df
+df30$trt=NA
+
+# treatment assignment
+for(i in 1:801)
+    {
+    prob=0.02+0.7*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
+    df10$trt[i]=rbinom(1,1,prob)
+}
+df10[is.na(df10)]=1
+
+for(i in 1:601)
+    {
+    prob=0.02+0.7*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
+    df20$trt[i]=rbinom(1,1,prob)
+  }
+df20[is.na(df20)]=1
+
+for(i in 1:401)
+    {
+    prob=0.02+0.7*df30$pp[i]+0.02*df30$X1[i]-0.012*df30$X2[i]+0.006*df30$X3[i]-0.0005*df30$X4[i]-0.03*df30$X5[i]
+    df30$trt[i]=rbinom(1,1,prob)
+}
+df30[is.na(df30)]=1
+```
+
+### Outcome Y-binary
+
+The outcome is whether the side effect appears
+```{r Relatively frequent binary outcome} 
+
+## x5 is unmeasured confounder, coefficient = 0.007
+## df10 
+
+df10_1 = df10
+df10_1$Y = NA
+
+## assuming the exclusion restriction holds
+
+#for(i in 1:1000)
+#  {
+#    df10_1$Y[i]=1/(1+exp(-(0.5-0.05*df10_1$trt[i]+0.03*df10_1$X1[i]-0.019*df10_1$X2[i]+0.013*df10_1$X3[i]-0.01*df10_1$X4[i]-0.03*df10_1$X5[i])))
+#}
+
+for(i in 1:1000)
+  {
+    df10_1$Y[i]=0.6117-0.01168*df10_1$trt[i]+0.007015*df10_1$X1[i]-0.004434*df10_1$X2[i]+0.003041*df10_1$X3[i]-0.002339*df10_1$X4[i]-0.007*df10_1$X5[i]
+}
+
+## df20
+
+df20_1 = df20 
+df20_1$Y = NA
+
+## assuming the exclusion restriction holds
+
+for(i in 1:1000)
+  {
+  df20_1$Y[i]=0.6117-0.01168*df20_1$trt[i]+0.007015*df20_1$X1[i]-0.004434*df20_1$X2[i]+0.003041*df20_1$X3[i]-0.002339*df20_1$X4[i]-0.007*df20_1$X5[i]
+}
+
+
+## df30
+
+df30_1 = df30
+df30_1$Y = NA
+
+## assuming the exclusion restriction holds
+
+for(i in 1:1000)
+  {
+   df30_1$Y[i]=0.6117-0.01168*df30_1$trt[i]+0.007015*df30_1$X1[i]-0.004434*df30_1$X2[i]+0.003041*df30_1$X3[i]-0.002339*df30_1$X4[i]-0.007*df30_1$X5[i]
+}
+
+```
+
+
+
+```{r}
+
+
+## x5 is unmeasured confounder, coefficient = -0.008
+
+## df10 
+
+df10_2 = df10
+df10_2$Y = NA
+
+## assuming the exclusion restriction holds
+
+for(i in 1:1000)
+  {
+  
+  df10_2$Y[i]=0.6117-0.01168*df10_2$trt[i]+0.007015*df10_2$X1[i]-0.004434*df10_2$X2[i]+0.003041*df10_2$X3[i]-0.002339*df10_2$X4[i]-0.008*df10_2$X5[i]
+  
+}
+
+
+## df20
+
+df20_2 = df20 
+df20_2$Y = NA
+
+## assuming the exclusion restriction holds
+
+for(i in 1:1000)
+  {
+  df20_2$Y[i]=0.6117-0.01168*df20_2$trt[i]+0.007015*df20_2$X1[i]-0.004434*df20_2$X2[i]+0.003041*df20_2$X3[i]-0.002339*df20_2$X4[i]-0.008*df20_2$X5[i]
+}
+
+## df30
+
+df30_2 = df30
+df30_2$Y = NA
+
+## assuming the exclusion restriction holds
+
+for(i in 1:1000)
+  {
+  df30_2$Y[i]=0.6117-0.01168*df30_2$trt[i]+0.007015*df30_2$X1[i]-0.004434*df30_2$X2[i]+0.003041*df30_2$X3[i]-0.002339*df30_2$X4[i]-0.008*df30_2$X5[i]
+}
+
+```
+
+
+
+```{r}
+
+## x5 is unmeasured confounder, coefficient = -0.009
+
+## df10 
+
+df10_3 = df10
+df10_3$Y = NA
+
+## assuming the exclusion restriction holds
+
+for(i in 1:1000)
+  {
+  df10_3$Y[i]=0.6117-0.01168*df10_3$trt[i]+0.007015*df10_3$X1[i]-0.004434*df10_3$X2[i]+0.003041*df10_3$X3[i]-0.002339*df10_3$X4[i]-0.009*df10_3$X5[i]
+}
+
+## df20
+
+df20_3 = df20 
+df20_3$Y = NA
+
+## assuming the exclusion restriction holds
+
+for(i in 1:1000)
+  {
+  df20_3$Y[i]=0.6117-0.01168*df20_3$trt[i]+0.007015*df20_3$X1[i]-0.004434*df20_3$X2[i]+0.003041*df20_3$X3[i]-0.002339*df20_3$X4[i]-0.009*df20_3$X5[i]
+}
+
+
+
+## df30
+
+df30_3 = df30
+df30_3$Y = NA
+
+## assuming the exclusion restriction holds
+
+for(i in 1:1000)
+  {
+  df30_3$Y[i]=0.6117-0.01168*df30_3$trt[i]+0.007015*df30_3$X1[i]-0.004434*df30_3$X2[i]+0.003041*df30_3$X3[i]-0.002339*df30_3$X4[i]-0.009*df30_3$X5[i]
+}
+
+```
+
+## Analysis of simulated data
+
+
+1. Ideal model adjusted for all covariates, including the
+unobserved confounder X5.
+2. Conventional model adjusted only for the observed covariates
+X1, X2, X3, and X4.
+3. IV model implemented through the 2SLS Equations (1)
+and (2), with the treatment effect estimated by ^a1 in
+Equation (2).
+
+We compare the results from implementing the three models. 
+
+```{r, warning= FALSE}
+set.seed(15)
+
+df1000=list(df10_1,df20_1,df30_1,df10_2,df20_2,df30_2,df10_3,df20_3,df30_3)
+
+drmse=matrix(NA, nrow=9, ncol=3)
+
+dfi=matrix(NA, nrow=1000, ncol=9)
+dfc=matrix(NA, nrow=1000, ncol=9)
+dfiv=matrix(NA, nrow=1000, ncol=9)
+
+for (i in 1:1000){
+  for(j in 1:9){
+    dfi[i,j]=RMSE(df1000[[j]]$Y, ideal_model(samp(df1000[[j]]))$fitted.values)
+    dfc[i,j]=RMSE(df1000[[j]]$Y, conv_model(samp(df1000[[j]]))$fitted.values)
+    dfiv[i,j]=RMSE(df1000[[j]]$Y,IV_model(samp(df1000[[j]]))$fitted.values)
+    drmse[j,1]=mean(dfi[,j])
+    drmse[j,2]=mean(dfc[,j])
+    drmse[j,3]=mean(dfiv[,j])
+  }
+}
+
+drmse=data.frame(drmse)
+
+
+dpb=matrix(NA, nrow=9, ncol=3)
+dfi=matrix(NA, nrow=1000, ncol=9)
+dfc=matrix(NA, nrow=1000, ncol=9)
+dfiv=matrix(NA, nrow=1000, ncol=9)
+
+
+# dbias=matrix(NA, nrow = 9, ncol=3)
+
+for (i in 1:1000){
+  for(j in 1:9){
+    dfi[i,j]=pbias(-0.01168, summary(ideal_model(samp(df1000[[j]])))$coefficients[7])
+    dfc[i,j]=pbias(-0.01168, summary(conv_model(samp(df1000[[j]])))$coefficients[6])
+    dfiv[i,j]=pbias(-0.01168, summary(IV_model(samp(df1000[[j]])))$coefficients[6])
+    dpb[j,1]=mean(dfi[,j])
+    dpb[j,2]=mean(dfc[,j])
+    dpb[j,3]=mean(dfiv[,j])
+    
+  }
+}
+
+dpb=data.frame(dpb)
+
+
+
+
+row.names(drmse)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
+colnames(drmse)=c("Ideal model","Conventional model","IV model")
+
+row.names(dpb)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
+colnames(dpb)=c("Ideal model","Conventional model","IV model")
+
+write.csv(drmse, file = "RMSE_1000.csv")
+
+write.csv(dpb, file = "dpb_1000.csv")
+
+#kable(drmse, caption="RMSE of models", align="c")
+#kable(dpb, caption="Bias of models", align="c")
+
+```
+
+
+```{r,warning=FALSE}
+
+
+# Coverage Rate
+
+
+# % of times across 1000 simulation when the 95%CI includes the true RD
+
+
+cr = matrix(NA, nrow=9, ncol=3)
+
+ideal_model_cr = function(data){
+  m = lm(Y~.-patientid - physicianid - pp, data = data)
+  conf = confint(m, 'trt', level=0.95)
+  coverage = ifelse(as.numeric(conf[1]) <= -0.01168  & -0.01168 <= round(as.numeric(conf[2]),5),1,0)
+  return(coverage)
+}
+
+conv_model_cr = function(data){
+  m = lm(Y~.-patientid - physicianid - pp - X5, data = data)
+  conf = confint(m, 'trt', level=0.95)
+  coverage = ifelse(as.numeric(conf[1]) <= -0.01168  & -0.01168 <= as.numeric(conf[2]),1,0)
+  return(coverage)
+}
+
+
+
+
+
+IV_model_cr = function(data){
+  m = ivreg(Y~.-patientid - physicianid - pp - X5| X1+X2+X3+X4+pp, data=data)
+  conf = confint(m, 'trt', level=0.95)
+  coverage = ifelse(as.numeric(conf[1]) <= as.numeric(-0.01168)  & -0.01168 <= as.numeric(conf[2]),1,0)
+  return(coverage)
+}
+
+
+cr_function = function(co){
+  cr = sum(co[co == 1])/1000
+  return(cr)
+}
+
+
+coi=matrix(NA, nrow=1000, ncol=9)
+coc=matrix(NA, nrow=1000, ncol=9)
+coiv=matrix(NA, nrow=1000, ncol=9)
+
+
+
+for (i in 1:1000){
+  for (j in 1:9){
+    coi[i,j] = ideal_model_cr(samp(df1000[[j]]))
+    coc[i,j] = conv_model_cr(samp(df1000[[j]]))
+    coiv[i,j] = IV_model_cr((samp(df1000[[j]])))
+    cr[j,1]=cr_function(coi[,j])
+    cr[j,2]=cr_function(coc[,j])
+    cr[j,3]=cr_function(coiv[,j])
+  }
+}
+
+cr = as.data.frame(cr)
+row.names(cr)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
+colnames(cr)=c("Ideal model","Conventional model","IV model")
+
+write.csv(cr, file = "cr_1000.csv")
+
+```
+
+
+Visualization of the data
+```{r}
+iv1000=matrix(NA, nrow=1000, ncol=9)
+
+for (i in 1:1000){
+  for (j in 1:9){
+    iv1000[i,j]=pbias(-0.01168, summary(IV_model(samp(df1000[[j]])))$coefficients[6])
+  }
+}
+
+iv1000=data.frame(iv1000)
+colnames(iv1000)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
+
+write.csv(iv1000, file="iv1000.csv")
+
+```
