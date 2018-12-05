@@ -35,7 +35,7 @@ conv_model = function(data){
 }
 
 IV_model = function(data){
-  m = ivreg(Y~X1+X2+X3+X4+trt| X1+X2+X3+X4+pp, data=data))
+  m = ivreg(Y~X1+X2+X3+X4+trt| X1+X2+X3+X4+pp, data=data)
   return(m)
 }
 
