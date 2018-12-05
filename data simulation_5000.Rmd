@@ -396,7 +396,4 @@ colnames(cr)=c("Ideal model","Conventional model","IV model")
 
 write.csv(cr, file = "cr_5000.csv")
 
-
-
-
 ```
