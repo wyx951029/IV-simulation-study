@@ -44,15 +44,6 @@ RMSE = function(y, ypred) {
   return(RMSE)
 }
 
-#bias = function(data,alpha3){
-#  r_pp1_uc1 = mean(data[data$pp == 1 & data$X5 == 1,]$Y)
-#  r_pp0_uc1 = mean(data[data$pp == 1 & data$X5 == 0,]$Y)
-#  r_pp1 = mean(data[data$pp == 1,]$Y)
-# r_pp0 = mean(data[data$pp == 0,]$Y)
-#  b = alpha3*mean(data$X5)*(((r_pp1_uc1-r_pp0_uc1)/(r_pp1-r_pp0))-1)
-#  return(b)
-#}
-
 pbias = function(true_rd, alpha){
   p = ((alpha-true_rd)/true_rd)*100
   return(p)
@@ -92,21 +83,21 @@ df30=df
 df30$trt=NA
 
 # treatment assignment
-for(i in 1:(0.8*nrow(df10)))
+for(i in 1:8001)
     {
-    prob=0.02+-0.07*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
+    prob=0.02+0.7*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
     df10$trt[i]=rbinom(1,1,prob)
 }
 df10[is.na(df10)]=1
 
-for(i in 1:(0.8*nrow(df20)))
+for(i in 1:6001)
     {
-    prob=0.02+0.5*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
+    prob=0.02+0.7*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
     df20$trt[i]=rbinom(1,1,prob)
   }
 df20[is.na(df20)]=1
 
-for(i in 1:(0.8*nrow(df30)))
+for(i in 1:4001)
     {
     prob=0.02+0.7*df30$pp[i]+0.02*df30$X1[i]-0.012*df30$X2[i]+0.006*df30$X3[i]-0.0005*df30$X4[i]-0.03*df30$X5[i]
     df30$trt[i]=rbinom(1,1,prob)
@@ -321,10 +312,10 @@ dpb=data.frame(dpb)
 
 
 
-row.names(drmse)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
+row.names(drmse)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
 colnames(drmse)=c("Ideal model","Conventional model","IV model")
 
-row.names(dpb)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
+row.names(dpb)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
 colnames(dpb)=c("Ideal model","Conventional model","IV model")
 
 write.csv(drmse, file = "RMSE_10000.csv")
@@ -398,7 +389,7 @@ for (i in 1:1000){
 }
 
 cr = as.data.frame(cr)
-row.names(cr)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
+row.names(cr)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
 colnames(cr)=c("Ideal model","Conventional model","IV model")
 
 write.csv(cr, file = "cr_10000.csv")
@@ -417,7 +408,7 @@ for (i in 1:1000){
 }
 
 iv10000=data.frame(iv10000)
-colnames(iv10000)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
+colnames(iv10000)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
 
 write.csv(iv10000, file="iv10000.csv")
 

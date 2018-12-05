@@ -33,7 +33,7 @@ conv_model = function(data){
 }
 
 IV_model = function(data){
-  m = ivreg(W~.-patientid - physicianid - pp - X5| X1+X2+X3+X4+pp, data=data)
+  m = ivreg(W~.-patientid - physicianid - pp - X5 | X1+X2+X3+X4+pp, data=data)
   return(m)
 }
 
@@ -41,15 +41,6 @@ RMSE = function(y, ypred) {
   RMSE <- sqrt(mean((y - ypred)^2))
   return(RMSE)
 }
-
-#bias = function(data,alpha3){
-#  r_pp1_uc1 = mean(data[data$pp == 1 & data$X5 == 1,]$W)
-#  r_pp0_uc1 = mean(data[data$pp == 1 & data$X5 == 0,]$W)
-#  r_pp1 = mean(data[data$pp == 1,]$W)
-# r_pp0 = mean(data[data$pp == 0,]$W)
-#  b = alpha3*mean(data$X5)*(((r_pp1_uc1-r_pp0_uc1)/(r_pp1-r_pp0))-1)
-#  return(b)
-#}
 
 pbias = function(true_rd, alpha){
   p = ((alpha-true_rd)/true_rd)*100
@@ -90,21 +81,21 @@ df30=df
 df30$trt=NA
 
 # treatment assignment
-for(i in 1:(0.8*nrow(df10)))
+for(i in 1:32001)
     {
-    prob=0.02+0.3*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
+    prob=0.02+0.7*df10$pp[i]+0.02*df10$X1[i]-0.012*df10$X2[i]+0.006*df10$X3[i]-0.0005*df10$X4[i]-0.03*df10$X5[i]
     df10$trt[i]=rbinom(1,1,prob)
 }
 df10[is.na(df10)]=1
 
-for(i in 1:(0.8*nrow(df20)))
+for(i in 1:24001)
     {
-    prob=0.02+0.5*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
+    prob=0.02+0.7*df20$pp[i]+0.02*df20$X1[i]-0.012*df20$X2[i]+0.006*df20$X3[i]-0.0005*df20$X4[i]-0.03*df20$X5[i]
     df20$trt[i]=rbinom(1,1,prob)
   }
 df20[is.na(df20)]=1
 
-for(i in 1:(0.8*nrow(df30)))
+for(i in 1:16001)
     {
     prob=0.02+0.7*df30$pp[i]+0.02*df30$X1[i]-0.012*df30$X2[i]+0.006*df30$X3[i]-0.0005*df30$X4[i]-0.03*df30$X5[i]
     df30$trt[i]=rbinom(1,1,prob)
@@ -313,22 +304,15 @@ dpb_40000=data.frame(dpb)
 
 
 
-row.names(drmse_40000)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+row.names(drmse_40000)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
 colnames(drmse_40000)=c("Ideal model","Conventional model","IV model")
 
-# row.names(dbias)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
-# colnames(dbias)=c("Ideal model","IV model","Conventional model")
-
-row.names(dpb_40000)=c("pp=0.3,uc=0.3","pp=0.3,uc=0.4","pp=0.3,uc=0.5","pp=0.5,uc=0.3","pp=0.5,uc=0.4","pp=0.5,uc=0.5","pp=0.7,uc=0.3","pp=0.7,uc=0.4","pp=0.7,uc=0.5")
+row.names(dpb_40000)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
 colnames(dpb_40000)=c("Ideal model","Conventional model","IV model")
 
 
 write.csv(dpb_40000, file = "dpb_40000.csv")
 write.csv(drmse_40000, file = "RMSE_40000.csv")
-
-
-#kable(drmse, caption="RMSE of models", align="c")
-#kable(dpb, caption="Bias of models", align="c")
 ```
 
 Visualization of the data
@@ -342,7 +326,7 @@ for (i in 1:1000){
 }
 
 iv40000=data.frame(iv40000)
-colnames(iv40000)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
+colnames(iv40000)=c("ex=0.2,uc=-0.07","ex=0.2,uc=-0.08","ex=0.2,uc=-0.09","ex=0.3,uc=-0.07","ex=0.3,uc=-0.08","ex=0.3,uc=-0.09","ex=0.4,uc=-0.07","ex=0.4,uc=-0.08","ex=0.4,uc=-0.09")
 
 write.csv(iv40000, file="iv40000.csv")
 
