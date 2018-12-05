@@ -62,7 +62,7 @@ Medicine A&B treat on the same disease but have risk of side effect Y.
 ## Data Generation-Population size=5000
 
 ### Treatment Assignment
-```{r}
+```{r, warning= FALSE}
 # Patients characteristics
 X1=rbinom(5000, size=1, prob=0.4) # gender
 X2=rbinom(5000, size=1, prob=0.1) # age >= 75
