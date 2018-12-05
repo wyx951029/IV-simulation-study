@@ -330,3 +330,20 @@ write.csv(drmse_40000, file = "RMSE_40000.csv")
 #kable(drmse, caption="RMSE of models", align="c")
 #kable(dpb, caption="Bias of models", align="c")
 ```
+
+Visualization of the data
+```{r}
+iv40000=matrix(NA, nrow=1000, ncol=9)
+
+for (i in 1:1000){
+  for (j in 1:9){
+    iv40000[i,j]=pbias(-0.01168, summary(IV_model(samp(df40000[[j]])))$coefficients[6])
+  }
+}
+
+iv40000=data.frame(iv40000)
+colnames(iv40000)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
+
+write.csv(iv40000, file="iv40000.csv")
+
+```

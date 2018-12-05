@@ -273,7 +273,7 @@ Equation (2).
 We compare the results from implementing the three models. 
 
 ```{r, warning= FALSE}
-set.seed(25)
+set.seed(15)
 
 df10000=list(df10_1,df20_1,df30_1,df10_2,df20_2,df30_2,df10_3,df20_3,df30_3)
 
@@ -407,8 +407,17 @@ write.csv(cr, file = "cr_10000.csv")
 
 Visualization of the data
 ```{r}
+iv10000=matrix(NA, nrow=1000, ncol=9)
 
+for (i in 1:1000){
+  for (j in 1:9){
+    iv10000[i,j]=pbias(-0.01168, summary(IV_model(samp(df10000[[j]])))$coefficients[6])
+  }
+}
 
+iv10000=data.frame(iv10000)
+colnames(iv10000)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
 
+write.csv(iv10000, file="iv10000.csv")
 
 ```

@@ -397,3 +397,20 @@ colnames(cr)=c("Ideal model","Conventional model","IV model")
 write.csv(cr, file = "cr_5000.csv")
 
 ```
+
+Visualization of the data
+```{r}
+iv5000=matrix(NA, nrow=1000, ncol=9)
+
+for (i in 1:1000){
+  for (j in 1:9){
+    iv5000[i,j]=pbias(-0.01168, summary(IV_model(samp(df5000[[j]])))$coefficients[6])
+  }
+}
+
+iv5000=data.frame(iv5000)
+colnames(iv5000)=c("pp=0.3,uc=-0.07","pp=0.3,uc=-0.08","pp=0.3,uc=-0.09","pp=0.5,uc=-0.07","pp=0.5,uc=-0.08","pp=0.5,uc=-0.09","pp=0.7,uc=-0.07","pp=0.7,uc=-0.08","pp=0.7,uc=-0.09")
+
+write.csv(iv5000, file="iv5000.csv")
+
+```
