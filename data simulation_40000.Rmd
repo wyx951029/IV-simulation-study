@@ -23,12 +23,12 @@ samp = function(data){
 }
 
 ideal_model = function(data){
-  m = lm(W~.-patientid - physicianid - pp, data = data)
+  m = lm(Y~.-patientid - physicianid - pp, data = data)
   return(m)
 }
 
 conv_model = function(data){
-  m = lm(W~.-patientid - physicianid - pp - X5, data = data)
+  m = lm(Y~.-patientid - physicianid - pp - X5, data = data)
   return(m)
 }
 
@@ -48,7 +48,7 @@ pbias = function(true_rd, alpha){
 }
 ```
 
-Medicine A&B treat on the same disease but have risk of side effect W.
+Medicine A&B treat on the same disease but have risk of side effect Y.
 
 ## Data Generation-Population size=40000
 
@@ -103,7 +103,7 @@ for(i in 1:16001)
 df30[is.na(df30)]=1
 ```
 
-### Outcome W-binary
+### Outcome Y-binary
 
 The outcome is whether the side effect appears
 ```{r Relatively frequent binary outcome} 
@@ -112,39 +112,39 @@ The outcome is whether the side effect appears
 ## df10 
 
 df10_1 = df10
-df10_1$W = NA
+df10_1$Y = NA
 
 ## assuming the exclusion restriction holds
 
 
 for(i in 1:40000)
   {
-    df10_1$W[i]=0.6117-0.01168*df10_1$trt[i]+0.007015*df10_1$X1[i]-0.004434*df10_1$X2[i]+0.003041*df10_1$X3[i]-0.002339*df10_1$X4[i]-0.007*df10_1$X5[i]
+    df10_1$Y[i]=0.6117-0.01168*df10_1$trt[i]+0.007015*df10_1$X1[i]-0.004434*df10_1$X2[i]+0.003041*df10_1$X3[i]-0.002339*df10_1$X4[i]-0.007*df10_1$X5[i]
 }
 
 ## df20
 
 df20_1 = df20 
-df20_1$W = NA
+df20_1$Y = NA
 
 ## assuming the exclusion restriction holds
 
 for(i in 1:40000)
   {
-  df20_1$W[i]=0.6117-0.01168*df20_1$trt[i]+0.007015*df20_1$X1[i]-0.004434*df20_1$X2[i]+0.003041*df20_1$X3[i]-0.002339*df20_1$X4[i]-0.007*df20_1$X5[i]
+  df20_1$Y[i]=0.6117-0.01168*df20_1$trt[i]+0.007015*df20_1$X1[i]-0.004434*df20_1$X2[i]+0.003041*df20_1$X3[i]-0.002339*df20_1$X4[i]-0.007*df20_1$X5[i]
 }
 
 
 ## df30
 
 df30_1 = df30
-df30_1$W = NA
+df30_1$Y = NA
 
 ## assuming the exclusion restriction holds
 
 for(i in 1:40000)
   {
-   df30_1$W[i]=0.6117-0.01168*df30_1$trt[i]+0.007015*df30_1$X1[i]-0.004434*df30_1$X2[i]+0.003041*df30_1$X3[i]-0.002339*df30_1$X4[i]-0.007*df30_1$X5[i]
+   df30_1$Y[i]=0.6117-0.01168*df30_1$trt[i]+0.007015*df30_1$X1[i]-0.004434*df30_1$X2[i]+0.003041*df30_1$X3[i]-0.002339*df30_1$X4[i]-0.007*df30_1$X5[i]
 }
 
 ```
@@ -159,14 +159,14 @@ for(i in 1:40000)
 ## df10 
 
 df10_2 = df10
-df10_2$W = NA
+df10_2$Y = NA
 
 ## assuming the exclusion restriction holds
 
 for(i in 1:40000)
   {
   
-  df10_2$W[i]=0.6117-0.01168*df10_2$trt[i]+0.007015*df10_2$X1[i]-0.004434*df10_2$X2[i]+0.003041*df10_2$X3[i]-0.002339*df10_2$X4[i]-0.008*df10_2$X5[i]
+  df10_2$Y[i]=0.6117-0.01168*df10_2$trt[i]+0.007015*df10_2$X1[i]-0.004434*df10_2$X2[i]+0.003041*df10_2$X3[i]-0.002339*df10_2$X4[i]-0.008*df10_2$X5[i]
   
 }
 
@@ -174,25 +174,25 @@ for(i in 1:40000)
 ## df20
 
 df20_2 = df20 
-df20_2$W = NA
+df20_2$Y = NA
 
 ## assuming the exclusion restriction holds
 
 for(i in 1:40000)
   {
-  df20_2$W[i]=0.6117-0.01168*df20_2$trt[i]+0.007015*df20_2$X1[i]-0.004434*df20_2$X2[i]+0.003041*df20_2$X3[i]-0.002339*df20_2$X4[i]-0.008*df20_2$X5[i]
+  df20_2$Y[i]=0.6117-0.01168*df20_2$trt[i]+0.007015*df20_2$X1[i]-0.004434*df20_2$X2[i]+0.003041*df20_2$X3[i]-0.002339*df20_2$X4[i]-0.008*df20_2$X5[i]
 }
 
 ## df30
 
 df30_2 = df30
-df30_2$W = NA
+df30_2$Y = NA
 
 ## assuming the exclusion restriction holds
 
 for(i in 1:40000)
   {
-  df30_2$W[i]=0.6117-0.01168*df30_2$trt[i]+0.007015*df30_2$X1[i]-0.004434*df30_2$X2[i]+0.003041*df30_2$X3[i]-0.002339*df30_2$X4[i]-0.008*df30_2$X5[i]
+  df30_2$Y[i]=0.6117-0.01168*df30_2$trt[i]+0.007015*df30_2$X1[i]-0.004434*df30_2$X2[i]+0.003041*df30_2$X3[i]-0.002339*df30_2$X4[i]-0.008*df30_2$X5[i]
 }
 
 ```
@@ -207,25 +207,25 @@ for(i in 1:40000)
 ## df10 
 
 df10_3 = df10
-df10_3$W = NA
+df10_3$Y = NA
 
 ## assuming the exclusion restriction holds
 
 for(i in 1:40000)
   {
-  df10_3$W[i]=0.6117-0.01168*df10_3$trt[i]+0.007015*df10_3$X1[i]-0.004434*df10_3$X2[i]+0.003041*df10_3$X3[i]-0.002339*df10_3$X4[i]-0.009*df10_3$X5[i]
+  df10_3$Y[i]=0.6117-0.01168*df10_3$trt[i]+0.007015*df10_3$X1[i]-0.004434*df10_3$X2[i]+0.003041*df10_3$X3[i]-0.002339*df10_3$X4[i]-0.009*df10_3$X5[i]
 }
 
 ## df20
 
 df20_3 = df20 
-df20_3$W = NA
+df20_3$Y = NA
 
 ## assuming the exclusion restriction holds
 
 for(i in 1:40000)
   {
-  df20_3$W[i]=0.6117-0.01168*df20_3$trt[i]+0.007015*df20_3$X1[i]-0.004434*df20_3$X2[i]+0.003041*df20_3$X3[i]-0.002339*df20_3$X4[i]-0.009*df20_3$X5[i]
+  df20_3$Y[i]=0.6117-0.01168*df20_3$trt[i]+0.007015*df20_3$X1[i]-0.004434*df20_3$X2[i]+0.003041*df20_3$X3[i]-0.002339*df20_3$X4[i]-0.009*df20_3$X5[i]
 }
 
 
@@ -233,13 +233,13 @@ for(i in 1:40000)
 ## df30
 
 df30_3 = df30
-df30_3$W = NA
+df30_3$Y = NA
 
 ## assuming the exclusion restriction holds
 
 for(i in 1:40000)
   {
-  df30_3$W[i]=0.6117-0.01168*df30_3$trt[i]+0.007015*df30_3$X1[i]-0.004434*df30_3$X2[i]+0.003041*df30_3$X3[i]-0.002339*df30_3$X4[i]-0.009*df30_3$X5[i]
+  df30_3$Y[i]=0.6117-0.01168*df30_3$trt[i]+0.007015*df30_3$X1[i]-0.004434*df30_3$X2[i]+0.003041*df30_3$X3[i]-0.002339*df30_3$X4[i]-0.009*df30_3$X5[i]
 }
 
 ```
@@ -270,9 +270,9 @@ dfiv=matrix(NA, nrow=1000, ncol=9)
 
 for (i in 1:1000){
   for(j in 1:9){
-    dfi[i,j]=RMSE(df40000[[j]]$W, ideal_model(samp(df40000[[j]]))$fitted.values)
-    dfc[i,j]=RMSE(df40000[[j]]$W, conv_model(samp(df40000[[j]]))$fitted.values)
-    dfiv[i,j]=RMSE(df40000[[j]]$W,IV_model(samp(df40000[[j]]))$fitted.values)
+    dfi[i,j]=RMSE(df40000[[j]]$Y, ideal_model(samp(df40000[[j]]))$fitted.values)
+    dfc[i,j]=RMSE(df40000[[j]]$Y, conv_model(samp(df40000[[j]]))$fitted.values)
+    dfiv[i,j]=RMSE(df40000[[j]]$Y,IV_model(samp(df40000[[j]]))$fitted.values)
     drmse[j,1]=mean(dfi[,j])
     drmse[j,2]=mean(dfc[,j])
     drmse[j,3]=mean(dfiv[,j])
