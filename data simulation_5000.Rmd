@@ -335,7 +335,7 @@ write.csv(dpb, file = "dpb_5000.csv")
 # Coverage Rate
 
 
-# % of times across 1000 simulation when the 95%CI includes the true RD
+# % of times across 1000 simulation when the 95% CI includes the true RD
 
 
 cr = matrix(NA, nrow=9, ncol=3)
@@ -343,16 +343,18 @@ cr = matrix(NA, nrow=9, ncol=3)
 ideal_model_cr = function(data){
   m = lm(Y~.-patientid - physicianid - pp, data = data)
   conf = confint(m, 'trt', level=0.95)
-  coverage = ifelse(as.numeric(conf[1]) <= as.numeric(-0.01168)  & -0.01168 <= round(as.numeric(conf[2]),5),1,0)
+  coverage = ifelse(as.numeric(conf[1]) <= -0.01168  & -0.01168 <= round(as.numeric(conf[2]),5),1,0)
   return(coverage)
 }
 
 conv_model_cr = function(data){
   m = lm(Y~.-patientid - physicianid - pp - X5, data = data)
   conf = confint(m, 'trt', level=0.95)
-  coverage = ifelse(as.numeric(conf[1]) <= as.numeric(-0.01168)  & -0.01168 <= round(as.numeric(conf[2]),5),1,0)
+  coverage = ifelse(as.numeric(conf[1]) <= -0.01168  & -0.01168 <= as.numeric(conf[2]),1,0)
   return(coverage)
 }
+
+
 
 
 
