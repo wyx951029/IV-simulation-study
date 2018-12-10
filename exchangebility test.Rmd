@@ -1,0 +1,131 @@
+---
+title: "exchangebility check"
+author: "Yixuan Wang"
+date: "12/9/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tidyr)
+library(SimDesign)
+suppressWarnings(library(ggplot2))
+suppressWarnings(library(knitr))
+library(AER)
+```
+
+
+```{r, functions}
+samp = function(data){
+  sp=sample(1:5000, 5000, replace = TRUE)
+  df = data[sp,]
+  return(df)
+}
+
+ideal_model = function(data){
+  m = lm(Y~.-patientid - physicianid - pp, data = data)
+  return(m)
+}
+
+conv_model = function(data){
+  m = lm(Y~.-patientid - physicianid - pp - X5, data = data)
+  return(m)
+}
+
+IV_model = function(data){
+  m = ivreg(Y~X1+X2+X3+X4+trt| X1+X2+X3+X4+pp, data=data)
+  return(m)
+}
+
+RMSE = function(y, ypred) {
+  RMSE <- sqrt(mean((y - ypred)^2))
+  return(RMSE)
+}
+
+pbias = function(true_rd, alpha){
+  p = ((alpha-true_rd)/true_rd)*100
+  return(p)
+}
+```
+
+Medicine A&B treat on the same disease but have risk of side effect Y.
+
+## Data Generation-Population size=5000
+
+### Treatment Assignment
+```{r, warning= FALSE}
+# Patients characteristics
+X1=rbinom(5000, size=1, prob=0.4) # gender
+X2=rbinom(5000, size=1, prob=0.1) # age >= 75
+X3=round(rnorm(5000, mean=23, sd=3)) # BMI 
+X4=round(rnorm(5000, mean=130, sd=7)) # blood pressure systolic
+X5=rbinom(5000, size=1, prob=0.1) # history of side effect related disease # unmeasured confounder 
+C=data.frame(cbind(X1,X2,X3,X4,X5)) 
+
+# Physician assignments
+patientid=c(1:5000)
+physicianid=sample(c(1:10))
+pp=sample(c(rep(0,5),rep(1,5)))
+df=data.frame(cbind(patientid,C,physicianid,pp))
+df$X1=as.numeric(df$X1)
+df$X2=as.numeric(df$X2)
+df$X3=as.numeric(df$X3)
+df$X4=as.numeric(df$X4)
+df$X5=as.numeric(df$X5)
+df$pp=as.numeric(df$pp)
+
+# treatment assignment
+ex_test_p=matrix(NA, nrow=5000, ncol=5000)
+for(i in 1:5000){
+  t=rep(NA,i)
+  t1=rep(1,(5000-i))
+  for(j in 1:i)
+    {
+    prob=0.02+0.7*df$pp[j]+0.02*df$X1[j]-0.012*df$X2[j]+0.006*df$X3[j]-0.0005*df$X4[j]-0.03*df$X5[j]
+    t[j]=rbinom(1,1,prob)
+  }
+  tt=c(t,t1)
+  ex_test_p[,i]=tt
+}
+
+ex_test_p=data.frame(ex_test_p)
+
+ex_test=matrix(NA, nrow=5000, ncol=5000)
+for(i in 1:5000){
+  Y=rep(NA,5000)
+  tt=ex_test_p[,i]
+  for(j in 1:5000){
+    Y[j]=0.6117-0.01168*tt[j]+0.007015*df$X1[j]-0.004434*df$X2[j]+0.003041*df$X3[j]-0.002339*df$X4[j]-0.007*df$X5[j]
+  }
+  ex_test[,i]=Y
+}
+
+
+#dpb=matrix(NA, nrow=5000, ncol=3)
+dfi=matrix(NA, nrow=5000, ncol=1)
+dfc=matrix(NA, nrow=5000, ncol=1)
+dfiv=matrix(NA, nrow=5000, ncol=1)
+
+
+# dbias=matrix(NA, nrow = 9, ncol=3)
+
+for (i in 1:5000){
+  aa=df
+  aa$trt=ex_test_p[,i]
+  aa$Y=ex_test[,i]
+  dfi[i,]=pbias(-0.01168, summary(ideal_model(aa))$coefficients[7])
+  dfc[i,]=pbias(-0.01168, summary(conv_model(aa))$coefficients[6])
+  dfiv[i,]=pbias(-0.01168, summary(IV_model(aa))$coefficients[6])
+}
+
+dpb=data.frame(cbind(dfi,dfc,dfiv))
+dpb$ex=seq(0,100,length.out=5000)
+colnames(dpb)[1:3]=c("ideal","conventional","IV")
+bias=gather(dpb, "model", "bias", 1:3)
+bias1=bias[bias$ex>=12,]
+ggplot(bias1, aes(x=ex, y=bias, group=model, color=model)) +
+  geom_line()
+
+write.csv(bias1,"ex_test.csv")
+```

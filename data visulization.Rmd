@@ -20,8 +20,8 @@ iv40000=iv40000[,2:10]
 ```
 
 ```{r}
-dfstrong=data.frame(cbind(iv1000$`ex=0.2,uc=-0.09`,iv5000$`ex=0.2,uc=-0.09`,iv10000$`ex=0.2,uc=-0.09`,iv40000$`ex=0.2,uc=-0.09`))
-dfmedium=data.frame(cbind(iv1000$`ex=0.3,uc=-0.08`,iv5000$`ex=0.3,uc=-0.08`,iv10000$`ex=0.3,uc=-0.08`,iv40000$`ex=0.3,uc=-0.08`))
+dfstrong=data.frame(cbind(iv1000$`ex=0.2,uc=-0.07`,iv5000$`ex=0.2,uc=-0.07`,iv10000$`ex=0.2,uc=-0.07`,iv40000$`ex=0.2,uc=-0.07`))
+dfmedium=data.frame(cbind(iv1000$`ex=0.3,uc=-0.07`,iv5000$`ex=0.3,uc=-0.07`,iv10000$`ex=0.3,uc=-0.07`,iv40000$`ex=0.3,uc=-0.07`))
 dfweak=data.frame(cbind(iv1000$`ex=0.4,uc=-0.07`,iv5000$`ex=0.4,uc=-0.07`,iv10000$`ex=0.4,uc=-0.07`,iv40000$`ex=0.4,uc=-0.07`))
 
 colnames(dfstrong)=c(1000,5000,10000,40000)
@@ -35,22 +35,67 @@ weak=gather(dfweak, "size", "bias", 1:4)
 ggplot(strong, aes(x=size, y=bias)) +
   geom_boxplot() +
   theme_bw()  +
-  theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=16))+
+  theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=14))+
   scale_x_discrete(limits = c("1000","5000","10000","40000"))+
-  labs(title="How does bias vary across different sample size?",x="Size", y="Bias")
+  labs(title="Bias variation across different sample size with strong IV",x="Sample Size", y="Bias")
 
-ggplot(medium, aes(x=size, y=bias)) +
-  geom_boxplot() +
-  theme_bw()  +
-  theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=16))+
-  scale_x_discrete(limits = c("1000","5000","10000","40000"))+
-  labs(title="How does bias vary across different sample size?",x="Size", y="Bias")
+#ggplot(medium, aes(x=size, y=bias)) +
+#  geom_boxplot() +
+#  theme_bw()  +
+#  theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=16))+
+#  scale_x_discrete(limits = c("1000","5000","10000","40000"))+
+#  labs(title="How does bias vary across different sample size with medium instrumental variable and medium unmeasured confounder?",x="Size", y="Bias")
 
 ggplot(weak, aes(x=size, y=bias)) +
   geom_boxplot() +
   theme_bw()  +
-  theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=16))+
+  theme(legend.text=element_text(size=12),legend.position="right",plot.title = element_text(hjust = 0.5,size=14))+
   scale_x_discrete(limits = c("1000","5000","10000","40000"))+
-  labs(title="How does bias vary across different sample size?",x="Size", y="Bias")
+  labs(title="Bias variation across different sample size with weak IV",x="Sample Size", y="Bias")
   
+```
+
+## result table
+```{r}
+RMSE_1000=read_csv("RMSE_1000.csv")
+RMSE_5000=read_csv("RMSE_5000.csv")
+RMSE_10000=read_csv("RMSE_10000.csv")
+RMSE_40000=read_csv("RMSE_40000.csv")
+
+dpb_1000=read_csv("dpb_1000.csv")
+dpb_5000=read_csv("dpb_5000.csv")
+dpb_10000=read_csv("dpb_10000.csv")
+dpb_40000=read_csv("dpb_40000.csv")
+
+cr_1000=read_csv("cr_1000.csv")
+cr_5000=read_csv("cr_5000.csv")
+cr_10000=read_csv("cr_10000.csv")
+cr_40000=read_csv("cr_40000.csv")
+
+rmse=data.frame(rbind(RMSE_1000[7,],RMSE_5000[7,],RMSE_10000[7,],RMSE_40000[7,]))
+bias=data.frame(rbind(dpb_1000[7,],dpb_5000[7,],dpb_10000[7,],dpb_40000[7,]))
+coverage=data.frame(rbind(cr_1000[7,],cr_5000[7,],cr_10000[7,],cr_40000[7,]))
+
+rmse[1,1]=1000
+rmse[2,1]=5000
+rmse[3,1]=10000
+rmse[4,1]=40000
+colnames(rmse)[1]="size"
+
+bias[1,1]=1000
+bias[2,1]=5000
+bias[3,1]=10000
+bias[4,1]=40000
+colnames(bias)[1]="size"
+
+coverage[1,1]=1000
+coverage[2,1]=5000
+coverage[3,1]=10000
+coverage[4,1]=40000
+colnames(coverage)[1]="size"
+
+write.csv(rmse, "rmse.csv")
+write.csv(bias, "bias.csv")
+write.csv(coverage, "cr.csv")
+
 ```
